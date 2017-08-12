@@ -1,5 +1,6 @@
 package android.steele.siblingagetracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         Log.d(TAG, "Settings selected!");
+        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(intent);
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
 
