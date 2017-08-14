@@ -8,5 +8,6 @@ import java.util.List;
  */
 
 public class FamilyMember {
+    public String name;
     public Date birthdate;
 }
