@@ -26,6 +26,8 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
 
         Log.d(TAG, "Click: Switch is: " + isChecked);
 
+        // TODO: I'll want to make the other elements in the layout appear/disappear
+        // depending on whether or not notifications is ON or OFF.
     }
 
 }
