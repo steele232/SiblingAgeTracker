@@ -10,6 +10,8 @@ import android.widget.CompoundButton;
 
 public class AddFamilyMemberActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private boolean inputIsValidated = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +24,10 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(AddFamilyMemberActivity.this, MainActivity.class);
-        startActivity(intent);
+        if (inputIsValidated)
+        {
+            Intent intent = new Intent(AddFamilyMemberActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 }
