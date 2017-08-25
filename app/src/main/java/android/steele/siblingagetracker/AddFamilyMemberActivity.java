@@ -15,6 +15,8 @@ import android.widget.EditText;
 public class AddFamilyMemberActivity extends AppCompatActivity implements View.OnClickListener {
 
     private boolean inputIsValidated = false;
+    private EditText editName;
+    private EditText editDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +26,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(this);
 
-        EditText dateEdit = (EditText) findViewById(R.id.editDate);
+        editName = (EditText) findViewById(R.id.editName);
+        editDate = (EditText) findViewById(R.id.editDate);
 
         /**
          * LISTENER FOR THE DATE TEXTBOX
@@ -34,13 +37,11 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
         // and the app fills in the separators, and
         // https://github.com/codepath/android_guides/wiki/Basic-Event-Listeners
 
-        dateEdit.addTextChangedListener(new TextWatcher() {
-
-            private boolean hasBeenAdded;
-            private int myCount;
+        editDate.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.d("editDate OnTextChanged", "BLAH BLAH1");
 
             }
 
@@ -48,25 +49,17 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // IF THE TEXT CHANGES THEN CALL setChangeDue WHICH DISPLAYS CHANGE DUE
                 // ON THE PAGE
-                Log.d("editDate OnTextChanged", "Last Character: " + s.subSequence(count - 1, count));
-//                Log.d("editDate OnTextChanged", "Hasbeenadded: " + hasBeenAdded);
-//                Log.d("editDate OnTextChanged", "TEXT HAS CHANGED: " + s);
-//                if (s.subSequence(count - 1, count).equals("/"))
-//                {
-//                    hasBeenAdded = true;
-//                    Log.d("editDate OnTextChanged", "Hasbeenadded: " + hasBeenAdded);
-//                    myCount++;
-//                }
+
+                if (s.subSequence(s.length() - 1, s.length()).toString().equals("-")) {
+                    augmentDateInput();
+                }
+                Log.d("editDate OnTextChanged", "Last Character: " + s.subSequence(s.length() - 1, s.length()));
 
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-//                if (!hasBeenAdded) {
-//                    s.append('/');
-//                    Log.d("editDate OnTextChanged", "Hasbeenadded: " + hasBeenAdded);
-//                }
-//                Log.d("editDate OnTextChanged", "TEXT HAS CHANGED: " + s);
+                Log.d("editDate OnTextChanged", "BLAH BLAH2");
             }
         });
     }
@@ -78,5 +71,12 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
             Intent intent = new Intent(AddFamilyMemberActivity.this, MainActivity.class);
             startActivity(intent);
         }
+    }
+
+    /**
+     *  SET THE $ CHANGE DUE TO THE CUSTOMER ($PAID - $PRICE = $CHANGEDUE)
+     */
+    public void augmentDateInput() {
+        editDate.getText().append("/");
     }
 }
