@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Sibling Age Tracker</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_notifications">Notifications</string>
     <string name="NotificationsSettingText2">How early do you want your notifications?</string>
 </resources>

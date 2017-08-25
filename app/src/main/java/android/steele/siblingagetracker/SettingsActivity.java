@@ -16,6 +16,8 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings2);
 
+        this.setTitle("Notifications");
+
         Switch s = (Switch) findViewById(R.id.switchBirthdayNotifications);
         s.setOnCheckedChangeListener(this);
     }
