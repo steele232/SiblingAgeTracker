@@ -23,11 +23,11 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_family_member);
 
-        Button button = (Button) findViewById(R.id.button);
+        Button button = (Button) findViewById(R.id.buttonSubmit);
         button.setOnClickListener(this);
 
         editName = (EditText) findViewById(R.id.editName);
-        editDate = (EditText) findViewById(R.id.editDate);
+//        editDate = (EditText) findViewById(R.id.editDate);
 
         /**
          * LISTENER FOR THE DATE TEXTBOX
@@ -37,31 +37,31 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
         // and the app fills in the separators, and
         // https://github.com/codepath/android_guides/wiki/Basic-Event-Listeners
 
-        editDate.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.d("editDate OnTextChanged", "BLAH BLAH1");
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // IF THE TEXT CHANGES THEN CALL setChangeDue WHICH DISPLAYS CHANGE DUE
-                // ON THE PAGE
-
-                if (s.subSequence(s.length() - 1, s.length()).toString().equals("-")) {
-                    augmentDateInput();
-                }
-                Log.d("editDate OnTextChanged", "Last Character: " + s.subSequence(s.length() - 1, s.length()));
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                Log.d("editDate OnTextChanged", "BLAH BLAH2");
-            }
-        });
+//        editDate.addTextChangedListener(new TextWatcher() {
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                Log.d("editDate OnTextChanged", "BLAH BLAH1");
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                // IF THE TEXT CHANGES THEN CALL setChangeDue WHICH DISPLAYS CHANGE DUE
+//                // ON THE PAGE
+//
+//                if (s.subSequence(s.length() - 1, s.length()).toString().equals("-")) {
+//                    augmentDateInput();
+//                }
+//                Log.d("editDate OnTextChanged", "Last Character: " + s.subSequence(s.length() - 1, s.length()));
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                Log.d("editDate OnTextChanged", "BLAH BLAH2");
+//            }
+//        });
     }
 
     @Override
