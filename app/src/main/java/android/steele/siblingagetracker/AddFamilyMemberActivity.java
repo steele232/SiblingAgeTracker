@@ -2,6 +2,7 @@ package android.steele.siblingagetracker;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,7 +17,9 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
 
     private boolean inputIsValidated = false;
     private EditText editName;
-    private EditText editDate;
+    private EditText editMonth;
+    private EditText editDay;
+    private EditText editYear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,41 +30,142 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
         button.setOnClickListener(this);
 
         editName = (EditText) findViewById(R.id.editName);
-//        editDate = (EditText) findViewById(R.id.editDate);
+
+        editMonth = (EditText) findViewById(R.id.editMonth);
+        editDay = (EditText) findViewById(R.id.editDay);
+        editYear = (EditText) findViewById(R.id.editYear);
 
         /**
-         * LISTENER FOR THE DATE TEXTBOX
+         * Checking the year input is extracted to the checkInputs function
          */
-        //TODO: INPUT VALIDATION.
-        //Try this editText inputWatcher... Sara's goal is just to type in the 09051963,
-        // and the app fills in the separators, and
-        // https://github.com/codepath/android_guides/wiki/Basic-Event-Listeners
+        editMonth.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-//        editDate.addTextChangedListener(new TextWatcher() {
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                Log.d("editDate OnTextChanged", "BLAH BLAH1");
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                // IF THE TEXT CHANGES THEN CALL setChangeDue WHICH DISPLAYS CHANGE DUE
-//                // ON THE PAGE
-//
-//                if (s.subSequence(s.length() - 1, s.length()).toString().equals("-")) {
-//                    augmentDateInput();
-//                }
-//                Log.d("editDate OnTextChanged", "Last Character: " + s.subSequence(s.length() - 1, s.length()));
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                Log.d("editDate OnTextChanged", "BLAH BLAH2");
-//            }
-//        });
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkInputs();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        /**
+         * Checking the year input is extracted to the checkInputs function
+         */
+        editDay.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkInputs();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        /**
+         * Checking the year input is extracted to the checkInputs function
+         */
+        editYear.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkInputs();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+    }
+
+    /**
+     *  SET THE $ CHANGE DUE TO THE CUSTOMER ($PAID - $PRICE = $CHANGEDUE)
+     */
+    public void checkInputs() {
+
+        boolean monthIsValid = false;
+        boolean dayIsValid = false;
+        boolean yearIsValid = false;
+
+
+        /**
+         * Check the month
+         */
+        String monthString = editMonth.getText().toString();
+        //get it to an int
+        int monthInt = Integer.parseInt(monthString);
+        //check if it's within the proper range
+        monthIsValid = (monthInt < 13 && monthInt > 0);
+
+        /**
+         * Check the day
+         */
+        String dayString = editMonth.getText().toString();
+        //get it to an int
+        int dayInt = Integer.parseInt(dayString);
+        //check if it's within the proper range
+        dayIsValid = (dayInt < 13 && dayInt > 0);
+
+
+        /**
+         * Check the year
+         */
+        String yearString = editMonth.getText().toString();
+        //get it to an int
+        int yearInt = Integer.parseInt(yearString);
+        //check if it's within the proper range
+        yearIsValid = (yearInt < 13 && yearInt > 0);
+
+        //conclusion
+        inputIsValidated = (monthIsValid && dayIsValid && yearIsValid);
+
+        showUserValidInputs(monthIsValid, dayIsValid, yearIsValid);
+
+    }
+
+    public void showUserValidInputs(boolean monthIsValid, boolean dayIsValid, boolean yearIsValid) {
+
+        //month
+        if (monthIsValid) {
+            editMonth.setBackgroundColor(0x00000000);
+        } else {
+            editMonth.setBackgroundColor(Color.RED);
+        }
+
+        //day
+        if (dayIsValid) {
+            editMonth.setBackgroundColor(0x00000000);
+        } else {
+            editMonth.setBackgroundColor(Color.RED);
+        }
+
+        //year
+        if (yearIsValid) {
+            editMonth.setBackgroundColor(0x00000000);
+        } else {
+            editMonth.setBackgroundColor(Color.RED);
+        }
+
     }
 
     @Override
@@ -71,12 +175,5 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
             Intent intent = new Intent(AddFamilyMemberActivity.this, MainActivity.class);
             startActivity(intent);
         }
-    }
-
-    /**
-     *  SET THE $ CHANGE DUE TO THE CUSTOMER ($PAID - $PRICE = $CHANGEDUE)
-     */
-    public void augmentDateInput() {
-        editDate.getText().append("/");
     }
 }
