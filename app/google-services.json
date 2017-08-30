@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "516005028527",
+    "firebase_url": "https://siblingagetracker.firebaseio.com",
+    "project_id": "siblingagetracker",
+    "storage_bucket": "siblingagetracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:516005028527:android:5b548d57158c338d",
+        "android_client_info": {
+          "package_name": "android.steele.siblingagetracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "516005028527-oejlqdbr5ls9f6i852hpuohp21h448p4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "android.steele.siblingagetracker",
+            "certificate_hash": "631642a6e682c021fe5bc0c14028ac9a58376248"
+          }
+        },
+        {
+          "client_id": "516005028527-le63ht965rdshishcn3emisd299njv6f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdTlNMSrRSeIIclBCZI4vt66jdgfW4s2M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "516005028527-le63ht965rdshishcn3emisd299njv6f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
