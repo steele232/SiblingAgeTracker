@@ -37,7 +37,7 @@
         tools:text="$0.00" />
 
     <TextView
-        android:id="@+id/sellerName"
+        android:id="@+id/name"
         android:layout_width="170dp"
         android:layout_height="24dp"
         android:layout_marginLeft="4dp"
