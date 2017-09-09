@@ -306,6 +306,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
             String dayString = editDay.getText().toString();
             String yearString = editYear.getText().toString();
             int monthInt = Integer.parseInt(monthString);
+            monthInt = monthInt - 1; // THE MONTH IN GREGORIAN CALENDAR CLASS IS A ZERO-BASED INDEX.
+                                     // AND THUS NEEDS TO BE ADJUSTED
             int dayInt = Integer.parseInt(dayString);
             int yearInt = Integer.parseInt(yearString);
             GregorianCalendar birthdate = new GregorianCalendar();

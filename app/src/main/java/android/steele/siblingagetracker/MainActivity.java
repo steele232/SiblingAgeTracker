@@ -22,14 +22,23 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity {
 
     private String TAG = MainActivity.class.toString();
     private ListView mListView;
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.US);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
 
-       super.onStart();
+        super.onStart();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userRef = database.getReference("user2");
@@ -68,6 +77,58 @@ public class MainActivity extends AppCompatActivity {
             protected void populateView(View view, FamilyMemberRow myFamilyMemberRow, int position) {
                 //Set the value for the views
                 ((TextView)view.findViewById(R.id.name)).setText(myFamilyMemberRow.name);
+
+                Gson gson = new Gson();
+                GregorianCalendar calendar = gson.fromJson(myFamilyMemberRow.birthdate, GregorianCalendar.class);
+
+                int birthMonth = calendar.get(GregorianCalendar.MONTH);
+                int birthDay = calendar.get(GregorianCalendar.DAY_OF_MONTH);
+                int birthYear = calendar.get(GregorianCalendar.YEAR);
+
+                ((TextView)view.findViewById(R.id.birthdate)).setText(
+                        dateFormat.format(calendar.getTime())
+                );
+
+
+                //CALCULATE THE AGE OF THE FAMILY MEMBER
+                final Calendar now = Calendar.getInstance();
+                int currentYear = now.get(Calendar.YEAR);
+                int currentMonth = now.get(Calendar.MONTH);
+                int currentDay = now.get(Calendar.DAY_OF_MONTH);
+
+                //whether the
+                int yearDifference = currentYear - birthYear;
+                int monthDifference = currentMonth - birthMonth;
+                int dayDifference = currentDay - birthDay;
+
+                //whether the last year should be counted...
+                //if we've past the birthday of the year, we count the last year.
+                //if we've NOT past the birthday of the year, we do not count the last year.
+                int offset = 1;
+                //if
+                if (
+                    currentMonth > birthMonth ||
+                        (
+                            currentMonth == birthMonth &&
+                            currentDay >= birthDay
+                        )
+                    )
+                {
+                    offset = 0;
+                }
+
+                int age = yearDifference - offset;
+
+                TextView ageView = (TextView) view.findViewById(R.id.age);
+
+                ageView.setText(Integer.toString(age));
+
+
+
+
+
+
+
 
                 //...
             }
