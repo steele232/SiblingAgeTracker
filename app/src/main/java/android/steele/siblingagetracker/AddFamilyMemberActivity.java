@@ -1,8 +1,8 @@
 package android.steele.siblingagetracker;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.steele.siblingagetracker.android.steele.siblingagetracker.model.FamilyMember;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,8 +10,16 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+
+import java.util.GregorianCalendar;
 
 public class AddFamilyMemberActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -23,6 +31,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
     private EditText editDay;
     private EditText editYear;
     private Button buttonSubmit;
+    private int nextFamilyMemberIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +118,44 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
             }
         });
 
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference("user2");
+        Log.d("TAG", userRef.getKey().toString());
+
+        DatabaseReference familyMembersRef = userRef.child("familyMembers");
+        /**
+         * https://firebase.google.com/docs/database/android/read-and-write
+         * You can use the onDataChange() method to read a static snapshot
+         * of the contents at a given path, as they existed at the time of
+         * the event. This method is !!**triggered once when the listener is
+         * attached**!! and again every time the data, including children,
+         * changes.
+         * ...
+         * In some cases you may want a callback to be called once and then
+         * immediately removed, such as when initializing a UI element that
+         * you don't expect to change. You can use the addListenerForSingleValueEvent()
+         * method to simplify this scenario: it triggers once and then does
+         * not trigger again.
+         */
+        familyMembersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int childrentCount = (int) dataSnapshot.getChildrenCount();
+                int greatestIndex = -1;
+                for (int i = 0; i < childrentCount; i++) {
+                    if (dataSnapshot.child("familyMember" + i).exists()) {
+                        greatestIndex = i;
+                    }
+                }
+                nextFamilyMemberIndex = greatestIndex + 1;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -253,8 +300,44 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
     public void onClick(View v) {
         if (inputIsValidated)
         {
+            String nameString = editName.getText().toString();
+
+            String monthString = editMonth.getText().toString();
+            String dayString = editDay.getText().toString();
+            String yearString = editYear.getText().toString();
+            int monthInt = Integer.parseInt(monthString);
+            int dayInt = Integer.parseInt(dayString);
+            int yearInt = Integer.parseInt(yearString);
+            GregorianCalendar birthdate = new GregorianCalendar();
+            birthdate.set(yearInt, monthInt, dayInt); //year, month, date
+
+            FamilyMember newFM = new FamilyMember();
+            newFM.birthdate = birthdate;
+            newFM.name = nameString;
+
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference userRef = database.getReference("user2");
+            Log.d("TAG", userRef.getKey().toString());
+
+            //call a function to get the next familymember index...
+//            int nextIndex = getNextFamilyMemberIndex();
+
+            DatabaseReference familyMembersRef = userRef.child("familyMembers");
+
+            DatabaseReference newFamilyMemberRef = familyMembersRef.child("familyMember" + nextFamilyMemberIndex);
+            DatabaseReference newNameRef = newFamilyMemberRef.child("name");
+            newNameRef.setValue(newFM.name);
+
+            DatabaseReference newBirthdate = newFamilyMemberRef.child("birthdate");
+            Gson gson = new Gson();
+            String birthDateString = gson.toJson(newFM.birthdate);
+            newBirthdate.setValue(birthDateString);
+
             Intent intent = new Intent(AddFamilyMemberActivity.this, MainActivity.class);
             startActivity(intent);
         }
     }
+
+
+
 }

@@ -47,36 +47,46 @@ public class MainActivity extends AppCompatActivity {
         //TEST THE FIREBASE DATABASE
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference("user1");
+        DatabaseReference userRef = database.getReference("user2");
         Log.d("TAG", userRef.getKey().toString());
 
-        //
-
-//        userRef.setValue("Hello TEST");
-
-        //GET ALL THE OBJECTS AND SET UP THE LISTVIEW
-        // (Don't worry about getting the
+        // TODO: GET ALL THE OBJECTS AND SET UP THE LISTVIEW
+        // (Don't worry about getting the things more than once.. ?
 
 
+        //IDEA:
+        // have the listview in the XML already
+        // get the values in the OnCreate->ref.addValueListener--->>
+        //      Set up the data and create the ListView from the data.
 
-//        myRef.setValue("Hello, World!");
-//        myRef.setValue("Bill is going to win!");
-        // Read from the database
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//                String value = dataSnapshot.getValue(String.class);
-//                Log.d(TAG, "Value is: " + value);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.w(TAG, "Failed to read value.", error.toException());
-//            }
-//        });
+        DatabaseReference familyMembersRef = userRef.child("familyMembers");
+        familyMembersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "ListView Loading");
+                Toast.makeText(MainActivity.this, "ListView Loading", Toast.LENGTH_LONG);
+                //make an arrayList or something
+                //      of familyMembers
+
+                // iterate through the dataSnapshot
+                //      Make a FamilyMember out of each row and
+                //      add them to the dataSnapShot
+
+                //sort the list?? maybe an added feature for later
+                //      sort by birthday first, for sure
+
+                //add that ArrayList / adapter? to the ListView,
+                //      (populate the listView)
+                //**** ALL WITHIN THE VALUE EVENT LISTENER!!! ******
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 package android.steele.siblingagetracker.android.steele.siblingagetracker.model;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -9,5 +10,5 @@ import java.util.List;
 
 public class FamilyMember {
     public String name;
-    public Date birthdate;
+    public GregorianCalendar birthdate;
 }

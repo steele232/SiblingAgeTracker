@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -74,7 +75,7 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
 
         //SET THE SWITCHES TO THEIR PROPER SETTINGS @
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference("user1");
+        DatabaseReference userRef = database.getReference("user2");
         Log.d("TAG", userRef.getKey().toString());
         DatabaseReference userPreferencesRef = userRef.child("userPreferences");
         Log.d("TAG", userPreferencesRef.getKey().toString());
@@ -99,6 +100,80 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         });
 
 
+        /**
+         * ADD ALL THE OTHER LISTENERS.
+         * GAMEPLAN: ** HAVE THEM:
+         *      UPDATE THE ACTIVITY'S USER PREFERENCES
+         *      CALL THE UPDATE FIREBASE 'SERVICE' FUNCTION
+         *      'update user preferences'
+         * RIGHT NOW: Get the User Preferences and apply them to the
+         *  initial interface.
+         */
+//        initiallyCheckBoxes();
+
+         checkThatDay.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mUserPreferences.thatDay = checkThatDay.isChecked();
+                 updateUserSettingRemote();
+             }
+         });
+
+         checkDayBefore1.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mUserPreferences.dayBefore1 = checkDayBefore1.isChecked();
+                 updateUserSettingRemote();
+             }
+         });
+
+         checkDayBefore2.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mUserPreferences.dayBefore2 = checkDayBefore2.isChecked();
+                 updateUserSettingRemote();
+             }
+         });
+
+         checkDayBefore3.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mUserPreferences.dayBefore3 = checkDayBefore3.isChecked();
+                 updateUserSettingRemote();
+             }
+         });
+
+         checkWkBefore1.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mUserPreferences.wkBefore1 = checkWkBefore1.isChecked();
+                 updateUserSettingRemote();
+             }
+         });
+
+        checkWkBefore2.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mUserPreferences.wkBefore2 = checkWkBefore2.isChecked();
+                 updateUserSettingRemote();
+             }
+         });
+
+         checkMonthBefore1.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mUserPreferences.monthBefore1 = checkMonthBefore1.isChecked();
+                 updateUserSettingRemote();
+             }
+         });
+
+         checkMonthBefore2.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 mUserPreferences.monthBefore2 = checkMonthBefore2.isChecked();
+                 updateUserSettingRemote();
+             }
+         });
 
     }
 
@@ -110,7 +185,6 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
         mUserPreferences.isActivated = isChecked;
 
 
-        // TODO: I'll want to make the other elements in the layout appear/disappear
         // depending on whether or not notifications is ON or OFF.
         if (mUserPreferences.isActivated) {
             //show the bottom buttons
@@ -123,6 +197,9 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
             checkMonthBefore1.setVisibility(View.VISIBLE);
             checkMonthBefore2.setVisibility(View.VISIBLE);
 
+            updateUserNotificationsActivationOnly();
+            initiallyCheckBoxes();
+
         } else {
             // make the buttons disappear
             checkThatDay.setVisibility(View.GONE);
@@ -134,9 +211,51 @@ public class SettingsActivity extends AppCompatActivity implements CompoundButto
             checkMonthBefore1.setVisibility(View.GONE);
             checkMonthBefore2.setVisibility(View.GONE);
 
+            updateUserNotificationsActivationOnly();
+
         }
 
-        // TODO: Make sure that the changes are reflected in FIREBASE
     }
+
+
+    public void initiallyCheckBoxes() {
+        checkThatDay.setChecked(mUserPreferences.thatDay);
+        checkDayBefore1.setChecked(mUserPreferences.dayBefore1);
+        checkDayBefore2.setChecked(mUserPreferences.dayBefore2);
+        checkDayBefore3.setChecked(mUserPreferences.dayBefore3);
+        checkWkBefore1.setChecked(mUserPreferences.wkBefore1);
+        checkWkBefore2.setChecked(mUserPreferences.wkBefore2);
+        checkMonthBefore1.setChecked(mUserPreferences.monthBefore1);
+        checkMonthBefore2.setChecked(mUserPreferences.monthBefore2);
+    }
+
+    public void updateUserSettingRemote() {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference("user2");
+        DatabaseReference userPreferencesRef = userRef.child("userPreferences");
+        HashMap <String, Object> preferencesMap = new HashMap<>();
+        preferencesMap.put("isActivated", activationSwitch.isChecked());
+        preferencesMap.put("thatDay", checkThatDay.isChecked());
+        preferencesMap.put("dayBefore1", checkDayBefore1.isChecked());
+        preferencesMap.put("dayBefore2", checkDayBefore2.isChecked());
+        preferencesMap.put("dayBefore3", checkDayBefore3.isChecked());
+        preferencesMap.put("wkBefore1", checkWkBefore1.isChecked());
+        preferencesMap.put("wkBefore2", checkWkBefore2.isChecked());
+        preferencesMap.put("monthBefore1", checkMonthBefore1.isChecked());
+        preferencesMap.put("monthBefore2", checkMonthBefore2.isChecked());
+
+        userPreferencesRef.updateChildren(preferencesMap);
+    }
+
+    public void updateUserNotificationsActivationOnly() {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference("user2");
+        DatabaseReference userPreferencesRef = userRef.child("userPreferences");
+        DatabaseReference isActivatedRef = userPreferencesRef.child("isActivated");
+        isActivatedRef.setValue(mUserPreferences.isActivated);
+
+
+    }
+
 
 }
