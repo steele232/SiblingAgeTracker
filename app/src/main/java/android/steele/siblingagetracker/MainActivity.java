@@ -63,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.familyMembersList);
     }
 
+    /**
+     * onStart()
+     *
+     * Load the ListView on the OnStart lifecycle hook so that the
+     * Listview can be reloaded when a new FamilyMember is added.
+     */
     @Override
     protected void onStart() {
 
@@ -76,8 +82,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void populateView(View view, FamilyMemberRow myFamilyMemberRow, int position) {
                 //Set the value for the views
+
+                /**
+                 * SET THE NAME
+                 */
                 ((TextView)view.findViewById(R.id.name)).setText(myFamilyMemberRow.name);
 
+                /**
+                 * SET THE BIRTHDATE
+                 */
                 Gson gson = new Gson();
                 GregorianCalendar calendar = gson.fromJson(myFamilyMemberRow.birthdate, GregorianCalendar.class);
 
@@ -90,13 +103,15 @@ public class MainActivity extends AppCompatActivity {
                 );
 
 
-                //CALCULATE THE AGE OF THE FAMILY MEMBER
+                /**
+                 * CALCULATE THE AGE OF THE FAMILY MEMBER
+                 */
                 final Calendar now = Calendar.getInstance();
                 int currentYear = now.get(Calendar.YEAR);
                 int currentMonth = now.get(Calendar.MONTH);
                 int currentDay = now.get(Calendar.DAY_OF_MONTH);
 
-                //whether the
+                //calculating the differences
                 int yearDifference = currentYear - birthYear;
                 int monthDifference = currentMonth - birthMonth;
                 int dayDifference = currentDay - birthDay;
@@ -116,21 +131,11 @@ public class MainActivity extends AppCompatActivity {
                 {
                     offset = 0;
                 }
-
                 int age = yearDifference - offset;
 
                 TextView ageView = (TextView) view.findViewById(R.id.age);
-
                 ageView.setText(Integer.toString(age));
 
-
-
-
-
-
-
-
-                //...
             }
         };
         mListView.setAdapter(mAdapter);
