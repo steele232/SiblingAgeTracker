@@ -159,9 +159,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
 
     }
 
-    /**
-     *  SET THE $ CHANGE DUE TO THE CUSTOMER ($PAID - $PRICE = $CHANGEDUE)
-     */
+
     public void checkInputs() {
 
         boolean monthIsValid = false;
