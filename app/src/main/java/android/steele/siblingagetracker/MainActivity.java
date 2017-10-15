@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private String TAG = MainActivity.class.toString();
     private ListView mListView;
@@ -137,8 +138,10 @@ public class MainActivity extends AppCompatActivity {
                 ageView.setText(Integer.toString(age));
 
             }
+
         };
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
 
     }
 
@@ -166,5 +169,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.w("Testing", "You clicked Item: " + id + " at position:" + position);
+
+        // get it pulling up a dialogFragment* ?
+
     }
 }
