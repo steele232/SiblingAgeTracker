@@ -1,9 +1,12 @@
 package android.steele.siblingagetracker;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.steele.siblingagetracker.android.steele.siblingagetracker.model.FamilyMemberRow;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -166,7 +169,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.w("Testing", "You clicked Item: " + id + " at position:" + position);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Test Dialog = " + position);
+        builder.setMessage("Here will be the name");
+        AlertDialog dialog = builder.create();
+//        dialog.getWindow().getAttributes().windowAnimations = buildDialog();
+        dialog.show();
+
+
+
+
         // get it pulling up a dialogFragment* ?
 
+    }
+
+    private void buildDialog(int animationSource, String type, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Test Dialog " + position);
+        builder.setMessage(type);
+        builder.setNegativeButton("OK", null);
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = animationSource;
+        dialog.show();
     }
 }
