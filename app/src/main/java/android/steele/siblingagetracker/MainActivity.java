@@ -114,19 +114,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //whether the last year should be counted...
                 //if we've past the birthday of the year, we count the last year.
                 //if we've NOT past the birthday of the year, we do not count the last year.
-                int offset = 1;
-                //if
+                int negativeOffset = 1;
+                //we will subtract 1 from the yearDifference (to end up with the age in years) if we haven't come upon the birthday yet.
                 if (
-                    currentMonth > birthMonth ||
+                    birthMonth < currentMonth ||
                         (
                             currentMonth == birthMonth &&
                             currentDay >= birthDay
                         )
                     )
                 {
-                    offset = 0;
+                    //we HAVE passed the birthDay this year, so we will NOT subtract 1 from the yearDifference.
+                    //If so, the yearDifference IS the age.
+                    negativeOffset = 0;
                 }
-                int age = yearDifference - offset;
+                int age = yearDifference - negativeOffset;
 
                 TextView ageView = (TextView) view.findViewById(R.id.age);
                 ageView.setText(Integer.toString(age));
