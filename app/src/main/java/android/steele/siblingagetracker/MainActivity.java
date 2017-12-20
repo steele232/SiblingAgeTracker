@@ -1,7 +1,5 @@
 package android.steele.siblingagetracker;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.steele.siblingagetracker.android.steele.siblingagetracker.model.FamilyMemberRow;
@@ -19,8 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private String TAG = MainActivity.class.toString();
     private ListView mListView;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.US);
+    private String username = "user2";
 
 
     @Override
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Toast.makeText(MainActivity.this, "Let's add a new Family Member!!", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(MainActivity.this, AddFamilyMemberActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
 
             }
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onStart();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference("user2");
+        DatabaseReference userRef = database.getReference(username);
         DatabaseReference familyMembersRef = userRef.child("familyMembers");
 
         FirebaseListAdapter<FamilyMemberRow> mAdapter = new FirebaseListAdapter<FamilyMemberRow>(this, FamilyMemberRow.class, R.layout.row_family_member, familyMembersRef) {
@@ -168,30 +171,79 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.w("Testing", "You clicked Item: " + id + " at position:" + position);
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+        Log.e("Testing", "You clicked Item: " + id + " at position:" + position);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Test Dialog = " + position);
-        builder.setMessage("Here will be the name");
-        AlertDialog dialog = builder.create();
-//        dialog.getWindow().getAttributes().windowAnimations = buildDialog();
-        dialog.show();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference(username);
+        DatabaseReference familyMembersRef = userRef.child("familyMembers");
 
 
+        familyMembersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
+                Gson gson = new Gson();
 
-        // get it pulling up a dialogFragment* ?
+                String keyToKeep = "";
+                String nameToKeep = "";
+                GregorianCalendar birthdateToKeep = new GregorianCalendar();
+
+//                int childrenCount = (int) dataSnapshot.getChildrenCount();
+                Iterable<DataSnapshot> iter = dataSnapshot.getChildren();
+                int i = 0;
+                for (DataSnapshot snapshot : iter) {
+                    //if it's the right position...
+                    if (i == position) {
+                        //get the data, for repopulation
+                        String key = snapshot.getKey();
+                        String name = (String) snapshot.child("name").getValue();
+                        GregorianCalendar birthdate = gson.fromJson(snapshot.child("birthdate").getValue().toString(), GregorianCalendar.class);
+
+                        keyToKeep = key;
+                        nameToKeep = name;
+                        birthdateToKeep = birthdate;
+
+                        Log.e("DATA", key);
+                        Log.e("DATA", name);
+                        Log.e("DATA", birthdate.toString());
+                        Log.e("DATA", Integer.toString(position));
+
+                        Log.e("TESTING", snapshot.getKey());
+                        Log.e("TESTING", snapshot.getValue().toString());
+                    }
+                    i++;
+                }
+                callbackGoToEdit(
+                        keyToKeep,
+                        nameToKeep,
+                        birthdateToKeep);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 
-    private void buildDialog(int animationSource, String type, int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Test Dialog " + position);
-        builder.setMessage(type);
-        builder.setNegativeButton("OK", null);
-        AlertDialog dialog = builder.create();
-        dialog.getWindow().getAttributes().windowAnimations = animationSource;
-        dialog.show();
+    private void callbackGoToEdit(
+            String key,
+            String name,
+            GregorianCalendar birthdate
+    ) {
+        Intent intent = new Intent(MainActivity.this , EditFamilyMemberActivity.class);
+        intent.putExtra("username", username);
+        intent.putExtra("key", key);
+        intent.putExtra("name", name);
+        Gson gson = new Gson();
+
+        intent.putExtra("birthdate", gson.toJson(birthdate));
+//        startActivityForResult(intent,)
+         startActivity(intent);
     }
+
+
 }

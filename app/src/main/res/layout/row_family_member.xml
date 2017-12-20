@@ -61,4 +61,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         tools:layout_editor_absoluteY="488dp" />
 
+    <TextView
+        android:id="@+id/keyRefString"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:layout_editor_absoluteX="186dp"
+        tools:layout_editor_absoluteY="146dp" />
+
 </android.support.constraint.ConstraintLayout>

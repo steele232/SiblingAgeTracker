@@ -32,11 +32,14 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
     private EditText editYear;
     private Button buttonSubmit;
     private int nextFamilyMemberIndex;
+    private String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_family_member);
+
+        username = getIntent().getStringExtra("username");
 
         this.setTitle("Add New Sibling");
 
@@ -120,7 +123,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference("user2");
+        DatabaseReference userRef = database.getReference(username);
         Log.d("TAG", userRef.getKey().toString());
 
         DatabaseReference familyMembersRef = userRef.child("familyMembers");
@@ -143,12 +146,17 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int childrentCount = (int) dataSnapshot.getChildrenCount();
                 int greatestIndex = -1;
+                nextFamilyMemberIndex = -1;
                 for (int i = 0; i < childrentCount; i++) {
                     if (dataSnapshot.child("familyMember" + i).exists()) {
                         greatestIndex = i;
+                    } else {
+                        nextFamilyMemberIndex = i;
                     }
                 }
-                nextFamilyMemberIndex = greatestIndex + 1;
+                if (nextFamilyMemberIndex == -1) {
+                    nextFamilyMemberIndex = greatestIndex + 1;
+                }
             }
 
             @Override
@@ -296,6 +304,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onClick(View v) {
+        checkInputs();
         if (inputIsValidated)
         {
             String nameString = editName.getText().toString();
