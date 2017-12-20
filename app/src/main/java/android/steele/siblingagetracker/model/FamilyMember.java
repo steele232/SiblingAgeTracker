@@ -1,4 +1,4 @@
-package android.steele.siblingagetracker.android.steele.siblingagetracker.model;
+package android.steele.siblingagetracker.model;
 
 import java.util.Date;
 import java.util.GregorianCalendar;

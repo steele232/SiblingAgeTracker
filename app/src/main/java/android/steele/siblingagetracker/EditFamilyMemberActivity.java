@@ -8,20 +8,24 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class AddFamilyMemberActivity extends AppCompatActivity {
+public class EditFamilyMemberActivity extends AppCompatActivity {
+
+    private static final String TAG = EditFamilyMemberActivity.class.getSimpleName();
 
     public static final int MAX_YEAR = 2200;
     public static final int MIN_YEAR = 1600;
@@ -31,17 +35,32 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     private EditText editDay;
     private EditText editYear;
     private Button buttonSubmit;
-    private int nextFamilyMemberIndex;
-    private String username = "";
+
+    private String _username = "";
+    private String _keyToEdit = "";
+    private String _name = "";
+    private GregorianCalendar _birthdate = new GregorianCalendar();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "Right at beginning of OnCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_family_member);
+        setContentView(R.layout.activity_edit_family_member);
 
-        username = getIntent().getStringExtra("username");
+        Gson gson = new Gson();
 
-        this.setTitle("Add New Sibling");
+        _username = getIntent().getStringExtra("username");
+        _keyToEdit = getIntent().getStringExtra("key");
+        _name = getIntent().getStringExtra("name");
+
+        String birthdateString = getIntent().getStringExtra("birthdate");
+        _birthdate = gson.fromJson(birthdateString, GregorianCalendar.class);
+
+        Log.e("DATA", _keyToEdit);
+        Log.e("DATA", _name);
+        Log.e("DATA", _birthdate.toString());
+
+        this.setTitle("Edit Sibling");
 
         buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
 //        buttonSubmit.setOnClickListener(this);
@@ -52,9 +71,12 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         editDay = (EditText) findViewById(R.id.editDay);
         editYear = (EditText) findViewById(R.id.editYear);
 
+        editName.setText(_name) ;
+
         /**
          * Checking the year input is extracted to the checkInputs function
          */
+        editMonth.setText(Integer.toString(_birthdate.get(Calendar.MONTH) + 1));
         editMonth.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -78,6 +100,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         /**
          * Checking the year input is extracted to the checkInputs function
          */
+        editDay.setText(Integer.toString(_birthdate.get(Calendar.DAY_OF_MONTH)));
         editDay.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -101,6 +124,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         /**
          * Checking the year input is extracted to the checkInputs function
          */
+        editYear.setText(Integer.toString(_birthdate.get(Calendar.YEAR)));
         editYear.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -123,50 +147,46 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference(username);
+        DatabaseReference userRef = database.getReference(_username);
         Log.d("TAG", userRef.getKey().toString());
 
         DatabaseReference familyMembersRef = userRef.child("familyMembers");
-        /**
-         * https://firebase.google.com/docs/database/android/read-and-write
-         * You can use the onDataChange() method to read a static snapshot
-         * of the contents at a given path, as they existed at the time of
-         * the event. This method is !!**triggered once when the listener is
-         * attached**!! and again every time the data, including children,
-         * changes.
-         * ...
-         * In some cases you may want a callback to be called once and then
-         * immediately removed, such as when initializing a UI element that
-         * you don't expect to change. You can use the addListenerForSingleValueEvent()
-         * method to simplify this scenario: it triggers once and then does
-         * not trigger again.
-         */
-        familyMembersRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int childrentCount = (int) dataSnapshot.getChildrenCount();
-                int greatestIndex = -1;
-                nextFamilyMemberIndex = -1;
-                for (int i = 0; i < childrentCount; i++) {
-                    if (dataSnapshot.child("familyMember" + i).exists()) {
-                        greatestIndex = i;
-                    } else {
-                        nextFamilyMemberIndex = i;
-                    }
-                }
-                if (nextFamilyMemberIndex == -1) {
-                    nextFamilyMemberIndex = greatestIndex + 1;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_edit, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Log.i(TAG, "Hit the Action Bar");
+
+        if (item.getItemId() == R.id.action_delete) {
+            Log.i(TAG, "Got to the delete click event");
+
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference userRef = database.getReference(_username);
+            Log.i(TAG, userRef.getKey().toString());
+
+            DatabaseReference familyMembersRef = userRef.child("familyMembers");
+
+            DatabaseReference editFamilyMemberRef = familyMembersRef.child(_keyToEdit);
+            editFamilyMemberRef.removeValue();
+
+            finish();
+
+        } else {
+            finish();
+        }
+
+        return true;
+//        return super.onOptionsItemSelected(item);
+    }
 
     public void checkInputs() {
 
@@ -271,10 +291,10 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     public void showUserValidInputs(boolean monthIsValid, boolean dayIsValid, boolean yearIsValid) {
 
         //source of rgb codes: http://www.rapidtables.com/web/color/RGB_Color.htm
-            //firebrick : 178,34,34
-            //forest green : 34,139,34
+        //firebrick : 178,34,34
+        //forest green : 34,139,34
         //lime green : 50,205,50
-            //dark sea green : 143,188,143
+        //dark sea green : 143,188,143
         //rosy brown : 188,143,143
         //slate gray : 112,128,144
 
@@ -313,37 +333,33 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             String yearString = editYear.getText().toString();
             int monthInt = Integer.parseInt(monthString);
             monthInt = monthInt - 1; // THE MONTH IN GREGORIAN CALENDAR CLASS IS A ZERO-BASED INDEX.
-                                     // AND THUS NEEDS TO BE ADJUSTED
+            // AND THUS NEEDS TO BE ADJUSTED
             int dayInt = Integer.parseInt(dayString);
             int yearInt = Integer.parseInt(yearString);
             GregorianCalendar birthdate = new GregorianCalendar();
             birthdate.set(yearInt, monthInt, dayInt); //year, month, date
 
-            FamilyMember newFM = new FamilyMember();
-            newFM.birthdate = birthdate;
-            newFM.name = nameString;
+            FamilyMember editedFM = new FamilyMember();
+            editedFM.birthdate = birthdate;
+            editedFM.name = nameString;
 
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference userRef = database.getReference("user2");
+            DatabaseReference userRef = database.getReference(_username);
             Log.d("TAG", userRef.getKey().toString());
-
-            //call a function to get the next familymember index...
-//            int nextIndex = getNextFamilyMemberIndex();
 
             DatabaseReference familyMembersRef = userRef.child("familyMembers");
 
-            DatabaseReference newFamilyMemberRef = familyMembersRef.child("familyMember" + nextFamilyMemberIndex);
-            DatabaseReference newNameRef = newFamilyMemberRef.child("name");
-            newNameRef.setValue(newFM.name);
+            DatabaseReference editFamilyMemberRef = familyMembersRef.child(_keyToEdit);
+            DatabaseReference newNameRef = editFamilyMemberRef.child("name");
+            newNameRef.setValue(editedFM.name);
 
-            DatabaseReference newBirthdate = newFamilyMemberRef.child("birthdate");
+            DatabaseReference editBirthdateRef = editFamilyMemberRef.child("birthdate");
             Gson gson = new Gson();
-            String birthDateString = gson.toJson(newFM.birthdate);
-            newBirthdate.setValue(birthDateString);
+            String birthDateString = gson.toJson(editedFM.birthdate);
+            editBirthdateRef.setValue(birthDateString);
 
+            Log.i(TAG, "Before Finish in OnClick");
             finish();
-//            Intent intent = new Intent(AddFamilyMemberActivity.this, MainActivity.class);
-//            startActivity(intent);
         }
     }
 

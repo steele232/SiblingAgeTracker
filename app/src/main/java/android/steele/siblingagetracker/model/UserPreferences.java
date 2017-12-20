@@ -1,4 +1,4 @@
-package android.steele.siblingagetracker.android.steele.siblingagetracker.model;
+package android.steele.siblingagetracker.model;
 
 /**
  * Created by jonathansteele on 8/14/17.

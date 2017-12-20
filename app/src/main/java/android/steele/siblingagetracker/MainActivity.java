@@ -2,16 +2,15 @@ package android.steele.siblingagetracker;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.steele.siblingagetracker.android.steele.siblingagetracker.model.FamilyMember;
-import android.steele.siblingagetracker.android.steele.siblingagetracker.model.FamilyMemberRow;
+import android.steele.siblingagetracker.model.FamilyMemberRow;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,20 +23,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    private String TAG = MainActivity.class.toString();
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     private ListView mListView;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.US);
+    private String username = "user2";
 
 
     @Override
@@ -47,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabEdit);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Let's add a new Family Member!!", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(MainActivity.this, AddFamilyMemberActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
 
             }
@@ -75,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference("user2");
+        DatabaseReference userRef = database.getReference(username);
         DatabaseReference familyMembersRef = userRef.child("familyMembers");
 
         FirebaseListAdapter<FamilyMemberRow> mAdapter = new FirebaseListAdapter<FamilyMemberRow>(this, FamilyMemberRow.class, R.layout.row_family_member, familyMembersRef) {
@@ -119,26 +117,30 @@ public class MainActivity extends AppCompatActivity {
                 //whether the last year should be counted...
                 //if we've past the birthday of the year, we count the last year.
                 //if we've NOT past the birthday of the year, we do not count the last year.
-                int offset = 1;
-                //if
+                int negativeOffset = 1;
+                //we will subtract 1 from the yearDifference (to end up with the age in years) if we haven't come upon the birthday yet.
                 if (
-                    currentMonth > birthMonth ||
+                    birthMonth < currentMonth ||
                         (
                             currentMonth == birthMonth &&
                             currentDay >= birthDay
                         )
                     )
                 {
-                    offset = 0;
+                    //we HAVE passed the birthDay this year, so we will NOT subtract 1 from the yearDifference.
+                    //If so, the yearDifference IS the age.
+                    negativeOffset = 0;
                 }
-                int age = yearDifference - offset;
+                int age = yearDifference - negativeOffset;
 
                 TextView ageView = (TextView) view.findViewById(R.id.age);
                 ageView.setText(Integer.toString(age));
 
             }
+
         };
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
 
     }
 
@@ -167,4 +169,84 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+        Log.e("Testing", "You clicked Item: " + id + " at position:" + position);
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference(username);
+        DatabaseReference familyMembersRef = userRef.child("familyMembers");
+
+
+        familyMembersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Gson gson = new Gson();
+
+                String keyToKeep = "";
+                String nameToKeep = "";
+                GregorianCalendar birthdateToKeep = new GregorianCalendar();
+
+//                int childrenCount = (int) dataSnapshot.getChildrenCount();
+                Iterable<DataSnapshot> iter = dataSnapshot.getChildren();
+                int i = 0;
+                for (DataSnapshot snapshot : iter) {
+                    //if it's the right position...
+                    if (i == position) {
+                        //get the data, for repopulation
+                        String key = snapshot.getKey();
+                        String name = (String) snapshot.child("name").getValue();
+                        GregorianCalendar birthdate = gson.fromJson(snapshot.child("birthdate").getValue().toString(), GregorianCalendar.class);
+
+                        keyToKeep = key;
+                        nameToKeep = name;
+                        birthdateToKeep = birthdate;
+
+                        Log.e("DATA", key);
+                        Log.e("DATA", name);
+                        Log.e("DATA", birthdate.toString());
+                        Log.e("DATA", Integer.toString(position));
+
+                        Log.e("TESTING", snapshot.getKey());
+                        Log.e("TESTING", snapshot.getValue().toString());
+                    }
+                    i++;
+                }
+                callbackGoToEdit(
+                        keyToKeep,
+                        nameToKeep,
+                        birthdateToKeep);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void callbackGoToEdit(
+            String key,
+            String name,
+            GregorianCalendar birthdate
+    ) {
+
+        Log.i(TAG, "Start of callback");
+        Intent intent = new Intent(MainActivity.this , EditFamilyMemberActivity.class);
+        intent.putExtra("username", username);
+        intent.putExtra("key", key);
+        intent.putExtra("name", name);
+        Gson gson = new Gson();
+
+        intent.putExtra("birthdate", gson.toJson(birthdate));
+//        startActivityForResult(intent,)
+         startActivity(intent);
+        Log.i(TAG, "End of callback");
+    }
+
+
 }

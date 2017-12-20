@@ -15,12 +15,33 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".AddFamilyMemberActivity"></activity>
+
+        <activity android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity"/>
+
+
+        <activity android:name=".AddFamilyMemberActivity"
+            android:parentActivityName="android.steele.siblingagetracker.MainActivity"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="android.steele.siblingagetracker.MainActivity"/>
+        </activity>
+
+
+
+
+        <activity android:name=".EditFamilyMemberActivity"
+            android:parentActivityName="android.steele.siblingagetracker.MainActivity"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="android.steele.siblingagetracker.MainActivity"/>
+        </activity>
+
     </application>
 
 </manifest>
