@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="android.steele.siblingagetracker.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_delete"
+        android:title="@string/delete_title"
+        android:icon="@mipmap/ic_action_delete"
+
         android:orderInCategory="100"
-        android:title="@string/action_notifications"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 </menu>

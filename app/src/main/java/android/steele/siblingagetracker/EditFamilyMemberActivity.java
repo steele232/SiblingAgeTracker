@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -149,41 +152,41 @@ public class EditFamilyMemberActivity extends AppCompatActivity {
 
         DatabaseReference familyMembersRef = userRef.child("familyMembers");
 
-        /**
-         * https://firebase.google.com/docs/database/android/read-and-write
-         * You can use the onDataChange() method to read a static snapshot
-         * of the contents at a given path, as they existed at the time of
-         * the event. This method is !!**triggered once when the listener is
-         * attached**!! and again every time the data, including children,
-         * changes.
-         * ...
-         * In some cases you may want a callback to be called once and then
-         * immediately removed, such as when initializing a UI element that
-         * you don't expect to change. You can use the addListenerForSingleValueEvent()
-         * method to simplify this scenario: it triggers once and then does
-         * not trigger again.
-         */
-//        familyMembersRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                int childrentCount = (int) dataSnapshot.getChildrenCount();
-//                int greatestIndex = -1;
-//                for (int i = 0; i < childrentCount; i++) {
-//                    if (dataSnapshot.child("familyMember" + i).exists()) {
-//                        greatestIndex = i;
-//                    }
-//                }
-//                nextFamilyMemberIndex = greatestIndex + 1;
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_edit, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Log.i(TAG, "Hit the Action Bar");
+
+        if (item.getItemId() == R.id.action_delete) {
+            Log.i(TAG, "Got to the delete click event");
+
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference userRef = database.getReference(_username);
+            Log.i(TAG, userRef.getKey().toString());
+
+            DatabaseReference familyMembersRef = userRef.child("familyMembers");
+
+            DatabaseReference editFamilyMemberRef = familyMembersRef.child(_keyToEdit);
+            editFamilyMemberRef.removeValue();
+
+            finish();
+
+        } else {
+            finish();
+        }
+
+        return true;
+//        return super.onOptionsItemSelected(item);
+    }
 
     public void checkInputs() {
 
@@ -360,13 +363,6 @@ public class EditFamilyMemberActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-////        super.onBackPressed();
-////        Intent intent = new Intent(this , MainActivity.class);
-////        startActivity(intent); //IMPORTANT. TODO Fix this.. I'm not sure what the problem is here, but I just have to move on for now
-//        Toast.makeText(this, "After pressing 'update', please hit the back button on the top-left corner", Toast.LENGTH_LONG).show();
-//
-//    }
+
 
 }
