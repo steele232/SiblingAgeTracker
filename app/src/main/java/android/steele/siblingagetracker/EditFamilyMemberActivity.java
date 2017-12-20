@@ -2,7 +2,7 @@ package android.steele.siblingagetracker;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.steele.siblingagetracker.android.steele.siblingagetracker.model.FamilyMember;
+import android.steele.siblingagetracker.model.FamilyMember;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,7 +20,9 @@ import com.google.gson.Gson;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class EditFamilyMemberActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditFamilyMemberActivity extends AppCompatActivity {
+
+    private static final String TAG = EditFamilyMemberActivity.class.getSimpleName();
 
     public static final int MAX_YEAR = 2200;
     public static final int MIN_YEAR = 1600;
@@ -37,6 +40,7 @@ public class EditFamilyMemberActivity extends AppCompatActivity implements View.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "Right at beginning of OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_family_member);
 
@@ -56,7 +60,7 @@ public class EditFamilyMemberActivity extends AppCompatActivity implements View.
         this.setTitle("Edit Sibling");
 
         buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
-        buttonSubmit.setOnClickListener(this);
+//        buttonSubmit.setOnClickListener(this);
 
         editName = (EditText) findViewById(R.id.editName);
 
@@ -315,7 +319,6 @@ public class EditFamilyMemberActivity extends AppCompatActivity implements View.
 
     }
 
-    @Override
     public void onClick(View v) {
         checkInputs();
         if (inputIsValidated)
@@ -352,12 +355,18 @@ public class EditFamilyMemberActivity extends AppCompatActivity implements View.
             String birthDateString = gson.toJson(editedFM.birthdate);
             editBirthdateRef.setValue(birthDateString);
 
-            onBackPressed();
-//            Intent intent = new Intent(EditFamilyMemberActivity.this , MainActivity.class);
-//            startActivity(intent);
+            Log.i(TAG, "Before Finish in OnClick");
+            finish();
         }
     }
 
-
+//    @Override
+//    public void onBackPressed() {
+////        super.onBackPressed();
+////        Intent intent = new Intent(this , MainActivity.class);
+////        startActivity(intent); //IMPORTANT. TODO Fix this.. I'm not sure what the problem is here, but I just have to move on for now
+//        Toast.makeText(this, "After pressing 'update', please hit the back button on the top-left corner", Toast.LENGTH_LONG).show();
+//
+//    }
 
 }

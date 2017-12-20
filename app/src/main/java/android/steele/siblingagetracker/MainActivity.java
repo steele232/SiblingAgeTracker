@@ -2,9 +2,8 @@ package android.steele.siblingagetracker;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.steele.siblingagetracker.android.steele.siblingagetracker.model.FamilyMemberRow;
+import android.steele.siblingagetracker.model.FamilyMemberRow;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -31,7 +30,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    private String TAG = MainActivity.class.toString();
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     private ListView mListView;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.US);
     private String username = "user2";
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         DatabaseReference familyMembersRef = userRef.child("familyMembers");
 
 
-        familyMembersRef.addValueEventListener(new ValueEventListener() {
+        familyMembersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -234,6 +234,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             String name,
             GregorianCalendar birthdate
     ) {
+
+        Log.i(TAG, "Start of callback");
         Intent intent = new Intent(MainActivity.this , EditFamilyMemberActivity.class);
         intent.putExtra("username", username);
         intent.putExtra("key", key);
@@ -243,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         intent.putExtra("birthdate", gson.toJson(birthdate));
 //        startActivityForResult(intent,)
          startActivity(intent);
+        Log.i(TAG, "End of callback");
     }
 
 

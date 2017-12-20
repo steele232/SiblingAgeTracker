@@ -2,7 +2,7 @@ package android.steele.siblingagetracker;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.steele.siblingagetracker.android.steele.siblingagetracker.model.FamilyMember;
+import android.steele.siblingagetracker.model.FamilyMember;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 
 import java.util.GregorianCalendar;
 
-public class AddFamilyMemberActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddFamilyMemberActivity extends AppCompatActivity {
 
     public static final int MAX_YEAR = 2200;
     public static final int MIN_YEAR = 1600;
@@ -44,7 +44,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
         this.setTitle("Add New Sibling");
 
         buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
-        buttonSubmit.setOnClickListener(this);
+//        buttonSubmit.setOnClickListener(this);
 
         editName = (EditText) findViewById(R.id.editName);
 
@@ -302,7 +302,6 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
 
     }
 
-    @Override
     public void onClick(View v) {
         checkInputs();
         if (inputIsValidated)
@@ -342,8 +341,9 @@ public class AddFamilyMemberActivity extends AppCompatActivity implements View.O
             String birthDateString = gson.toJson(newFM.birthdate);
             newBirthdate.setValue(birthDateString);
 
-            Intent intent = new Intent(AddFamilyMemberActivity.this, MainActivity.class);
-            startActivity(intent);
+            finish();
+//            Intent intent = new Intent(AddFamilyMemberActivity.this, MainActivity.class);
+//            startActivity(intent);
         }
     }
 
