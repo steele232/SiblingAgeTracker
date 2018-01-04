@@ -35,7 +35,6 @@ public class DetailFamilyMemberActivity extends AppCompatActivity {
     private EditText editMonthField;
     private EditText editDayField;
     private EditText editYearField;
-    private Button buttonSubmit;
     private int nextFamilyMemberIndex;
 
     private boolean isInEdittingMode = false;
@@ -80,8 +79,6 @@ public class DetailFamilyMemberActivity extends AppCompatActivity {
             Log.e("DATA", _birthdate.toString());
         }
 
-
-        buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
 
         editNameField = (EditText) findViewById(R.id.editName);
 
