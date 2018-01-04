@@ -23,8 +23,7 @@
             android:parentActivityName=".MainActivity"/>
 
 
-        <activity android:name=".AddFamilyMemberActivity"
-            android:label="@string/title_add"
+        <activity android:name=".DetailFamilyMemberActivity"
             android:parentActivityName="android.steele.siblingagetracker.MainActivity"
             android:launchMode="singleTop">
             <meta-data
@@ -32,15 +31,6 @@
                 android:value="android.steele.siblingagetracker.MainActivity"/>
         </activity>
 
-
-        <activity android:name=".EditFamilyMemberActivity"
-            android:label="@string/title_edit"
-            android:parentActivityName="android.steele.siblingagetracker.MainActivity"
-            android:launchMode="singleTop">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="android.steele.siblingagetracker.MainActivity"/>
-        </activity>
 
     </application>
 

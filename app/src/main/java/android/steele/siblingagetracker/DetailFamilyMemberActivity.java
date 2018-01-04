@@ -2,12 +2,14 @@ package android.steele.siblingagetracker;
 
 import android.graphics.Color;
 import android.steele.siblingagetracker.model.FamilyMember;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,11 +21,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class AddFamilyMemberActivity extends AppCompatActivity {
+public class DetailFamilyMemberActivity extends AppCompatActivity {
 
-    private static final String TAG = AddFamilyMemberActivity.class.getSimpleName();
+    private static final String TAG = DetailFamilyMemberActivity.class.getSimpleName();
 
     public static final int MAX_YEAR = 2200;
     public static final int MIN_YEAR = 1600;
@@ -34,17 +37,51 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
     private EditText editYearField;
     private Button buttonSubmit;
     private int nextFamilyMemberIndex;
-    private String username = "";
+
+    private boolean isInEdittingMode = false;
+
+    private String _username = "";
+    private String _keyToEdit = "";
+    private String _name = "";
+    private GregorianCalendar _birthdate = new GregorianCalendar();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_family_member);
+        if (getIntent().hasExtra("key")) {
+            isInEdittingMode = true;
+        }
+        if (isInEdittingMode) {
+            setContentView(R.layout.activity_edit_family_member);
+            setTitle(R.string.title_edit);
+        } else {
+            setContentView(R.layout.activity_add_family_member);
+            setTitle(R.string.title_add);
+        }
 
-        username = getIntent().getStringExtra("username");
+        Gson gson = new Gson();
+
+        //username gets sent whether it's edit or add because it's
+        //needed in both circumstances.
+        _username = getIntent().getStringExtra("username");
+
+        if (getIntent().hasExtra("key")) {
+            _keyToEdit = getIntent().getStringExtra("key");
+            Log.e("DATA", _keyToEdit);
+        }
+        if (getIntent().hasExtra("name")) {
+            _name = getIntent().getStringExtra("name");
+            Log.e("DATA", _name);
+        }
+        if (getIntent().hasExtra("birthdate")) {
+            String birthdateString = getIntent().getStringExtra("birthdate");
+            _birthdate = gson.fromJson(birthdateString, GregorianCalendar.class);
+            Log.e("DATA", _birthdate.toString());
+        }
+
 
         buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
-//        buttonSubmit.setOnClickListener(this);
 
         editNameField = (EditText) findViewById(R.id.editName);
 
@@ -52,9 +89,14 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         editDayField = (EditText) findViewById(R.id.editDay);
         editYearField = (EditText) findViewById(R.id.editYear);
 
-        /**
-         * Checking the year input is extracted to the checkInputs function
-         */
+
+        if (isInEdittingMode) {
+            editNameField.setText(_name);
+            editMonthField.setText(Integer.toString(_birthdate.get(Calendar.MONTH) + 1));
+            editDayField.setText(Integer.toString(_birthdate.get(Calendar.DAY_OF_MONTH)));
+            editYearField.setText(Integer.toString(_birthdate.get(Calendar.YEAR)));
+        }
+
         editMonthField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -75,9 +117,6 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             }
         });
 
-        /**
-         * Checking the year input is extracted to the checkInputs function
-         */
         editDayField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -98,9 +137,6 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             }
         });
 
-        /**
-         * Checking the year input is extracted to the checkInputs function
-         */
         editYearField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -110,9 +146,6 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 checkInputs();
-//                if (editYearField.getText().toString().length() == 4) {
-//                    buttonSubmit.requestFocus();
-//                }
             }
 
             @Override
@@ -123,25 +156,12 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference(username);
+        DatabaseReference userRef = database.getReference(_username);
         Log.d("TAG", userRef.getKey().toString());
 
         DatabaseReference familyMembersRef = userRef.child("familyMembers");
-        /**
-         * https://firebase.google.com/docs/database/android/read-and-write
-         * You can use the onDataChange() method to read a static snapshot
-         * of the contents at a given path, as they existed at the time of
-         * the event. This method is !!**triggered once when the listener is
-         * attached**!! and again every time the data, including children,
-         * changes.
-         * ...
-         * In some cases you may want a callback to be called once and then
-         * immediately removed, such as when initializing a UI element that
-         * you don't expect to change. You can use the addListenerForSingleValueEvent()
-         * method to simplify this scenario: it triggers once and then does
-         * not trigger again.
-         */
-        familyMembersRef.addValueEventListener(new ValueEventListener() {
+        //https://firebase.google.com/docs/database/android/read-and-write
+        familyMembersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int childrentCount = (int) dataSnapshot.getChildrenCount();
@@ -167,13 +187,51 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        if (isInEdittingMode) {
+            inflater.inflate(R.menu.menu_edit, menu);
+        }
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Log.i(TAG, "Hit the Action Bar");
+
+        if (item.getItemId() == R.id.action_delete) {
+            Log.i(TAG, "Got to the delete click event");
+
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference userRef = database.getReference(_username);
+            Log.i(TAG, userRef.getKey().toString());
+
+            DatabaseReference familyMembersRef = userRef.child("familyMembers");
+
+            DatabaseReference editFamilyMemberRef = familyMembersRef.child(_keyToEdit);
+            editFamilyMemberRef.removeValue();
+
+            finish();
+
+        } else {
+            finish();
+        }
+
+        return true;
+    }
+
+
+
+    /**
+     *
+     */
     public void checkInputs() {
 
         boolean monthInputIsValid = false;
         boolean dayInputIsValid = false;
         boolean yearInputIsValid = false;
-
 
         /**
          * Check the month
@@ -189,7 +247,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         }
 
         /**
-         * Check the year (PLACED IN CODE BEFORE DAY BECAUSE THE YEAR IS USED FOR LEAPYEARS..)
+         * Check the year (PLACED IN CODE BEFORE DAY BECAUSE THE YEAR IS
+         * USED FOR CALCULATING MONTHS WHICH MIGHT INVOLVES LEAPYEARS..)
          */
         int yearInt = 0;
         String yearString = editYearField.getText().toString();
@@ -255,14 +314,21 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             dayInputIsValid = false;
         }
 
-        //conclusion
         inputIsValidated = (monthInputIsValid && dayInputIsValid && yearInputIsValid);
 
         showUserValidInputs(monthInputIsValid, dayInputIsValid, yearInputIsValid);
 
     }
 
-    public void showUserValidInputs(boolean monthInputIsValid, boolean dayInputIsValid, boolean yearInputIsValid) {
+    /**
+     *
+     * @param monthInputIsValid
+     * @param dayInputIsValid
+     * @param yearInputIsValid
+     */
+    public void showUserValidInputs(boolean monthInputIsValid,
+                                    boolean dayInputIsValid,
+                                    boolean yearInputIsValid) {
 
         int acceptedColorInt =
             Color.argb(
@@ -300,6 +366,10 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *
+     * @param v
+     */
     public void onClick(View v) {
         checkInputs();
         if (inputIsValidated)
@@ -325,19 +395,30 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             DatabaseReference userRef = database.getReference("user2");
             Log.d("TAG", userRef.getKey().toString());
 
-            //call a function to get the next familymember index...
-//            int nextIndex = getNextFamilyMemberIndex();
-
             DatabaseReference familyMembersRef = userRef.child("familyMembers");
 
-            DatabaseReference newFamilyMemberRef = familyMembersRef.child("familyMember" + nextFamilyMemberIndex);
-            DatabaseReference newNameRef = newFamilyMemberRef.child("name");
-            newNameRef.setValue(newFM.name);
+            if (isInEdittingMode) {
 
-            DatabaseReference newBirthdate = newFamilyMemberRef.child("birthdate");
-            Gson gson = new Gson();
-            String birthDateString = gson.toJson(newFM.birthdate);
-            newBirthdate.setValue(birthDateString);
+                DatabaseReference toBeEdittedFamilyMemberRef = familyMembersRef.child(_keyToEdit);
+                DatabaseReference toBeEdittedNameRef = toBeEdittedFamilyMemberRef.child("name");
+                toBeEdittedNameRef.setValue(newFM.name);
+
+                DatabaseReference toBeEdittedBirthdate = toBeEdittedFamilyMemberRef.child("birthdate");
+                Gson gson = new Gson();
+                String birthDateString = gson.toJson(newFM.birthdate);
+                toBeEdittedBirthdate.setValue(birthDateString);
+
+            } else { //adding
+
+                DatabaseReference newFamilyMemberRef = familyMembersRef.child("familyMember" + nextFamilyMemberIndex);
+                DatabaseReference newNameRef = newFamilyMemberRef.child("name");
+                newNameRef.setValue(newFM.name);
+
+                DatabaseReference newBirthdate = newFamilyMemberRef.child("birthdate");
+                Gson gson = new Gson();
+                String birthDateString = gson.toJson(newFM.birthdate);
+                newBirthdate.setValue(birthDateString);
+            }
 
             finish();
         }

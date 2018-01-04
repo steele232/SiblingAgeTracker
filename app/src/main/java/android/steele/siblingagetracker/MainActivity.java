@@ -36,6 +36,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private String username = "user2";
 
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 //                Toast.makeText(MainActivity.this, "Let's add a new Family Member!!", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(MainActivity.this, AddFamilyMemberActivity.class);
+                Intent intent = new Intent(MainActivity.this, DetailFamilyMemberActivity.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
 
@@ -144,6 +148,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    /**
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -151,6 +160,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -170,6 +184,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         Log.e("Testing", "You clicked Item: " + id + " at position:" + position);
@@ -190,9 +211,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 GregorianCalendar birthdateToKeep = new GregorianCalendar();
 
 //                int childrenCount = (int) dataSnapshot.getChildrenCount();
-                Iterable<DataSnapshot> iter = dataSnapshot.getChildren();
+                Iterable<DataSnapshot> familyMemberCollection = dataSnapshot.getChildren();
                 int i = 0;
-                for (DataSnapshot snapshot : iter) {
+                for (DataSnapshot snapshot : familyMemberCollection) {
                     //if it's the right position...
                     if (i == position) {
                         //get the data, for repopulation
@@ -236,15 +257,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     ) {
 
         Log.i(TAG, "Start of callback");
-        Intent intent = new Intent(MainActivity.this , EditFamilyMemberActivity.class);
+        Intent intent = new Intent(MainActivity.this , DetailFamilyMemberActivity.class);
         intent.putExtra("username", username);
         intent.putExtra("key", key);
         intent.putExtra("name", name);
         Gson gson = new Gson();
 
         intent.putExtra("birthdate", gson.toJson(birthdate));
-//        startActivityForResult(intent,)
-         startActivity(intent);
+        startActivity(intent);
         Log.i(TAG, "End of callback");
     }
 
