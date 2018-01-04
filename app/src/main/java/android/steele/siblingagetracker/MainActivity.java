@@ -23,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private ListView _familyMemberListView;
-    private static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
+    private static final DateFormat localizedDateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
     private String username = "user2";
 
 
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 int birthYear = calendar.get(GregorianCalendar.YEAR);
 
                 ((TextView)view.findViewById(R.id.birthdate)).setText(
-                        dateFormat.format(calendar.getTime())
+                        localizedDateFormatter.format(calendar.getTime())
                 );
 
 
