@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private ListView mListView;
+    private ListView _familyMemberListView;
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.US);
     private String username = "user2";
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        mListView = (ListView) findViewById(R.id.familyMembersList);
+        _familyMemberListView = (ListView) findViewById(R.id.familyMembersList);
     }
 
     /**
@@ -143,8 +143,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
 
         };
-        mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(this);
+        _familyMemberListView.setAdapter(mAdapter);
+        _familyMemberListView.setOnItemClickListener(this);
 
     }
 
