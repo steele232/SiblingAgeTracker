@@ -7,14 +7,4 @@
     <color name="secondaryColor">#757575</color>
     <color name="dividerColor">#BDBDBD</color>
 
-    <color name="inputAcceptedA">128</color>
-    <color name="inputAcceptedR">50</color>
-    <color name="inputAcceptedG">205</color>
-    <color name="inputAcceptedB">50</color>
-
-    <color name="inputRefusedA">128</color>
-    <color name="inputRefusedR">188</color>
-    <color name="inputRefusedG">143</color>
-    <color name="inputRefusedB">143</color>
-
 </resources>

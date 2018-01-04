@@ -60,8 +60,6 @@ public class EditFamilyMemberActivity extends AppCompatActivity {
         Log.e("DATA", _name);
         Log.e("DATA", _birthdate.toString());
 
-        this.setTitle("Edit Sibling");
-
         buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
 //        buttonSubmit.setOnClickListener(this);
 
@@ -281,7 +279,7 @@ public class EditFamilyMemberActivity extends AppCompatActivity {
             dayIsValid = false;
         }
 
-        //conclusion
+
         inputIsValidated = (monthIsValid && dayIsValid && yearIsValid);
 
         showUserValidInputs(monthIsValid, dayIsValid, yearIsValid);
@@ -290,34 +288,41 @@ public class EditFamilyMemberActivity extends AppCompatActivity {
 
     public void showUserValidInputs(boolean monthIsValid, boolean dayIsValid, boolean yearIsValid) {
 
-        //source of rgb codes: http://www.rapidtables.com/web/color/RGB_Color.htm
-        //firebrick : 178,34,34
-        //forest green : 34,139,34
-        //lime green : 50,205,50
-        //dark sea green : 143,188,143
-        //rosy brown : 188,143,143
-        //slate gray : 112,128,144
+        int acceptedColorInt =
+                Color.argb(
+                        128,
+                        50,
+                        205,
+                        50
+                );
 
+        int refusedColorInt =
+                Color.argb(
+                        128,
+                        188,
+                        143,
+                        143
+                );
 
         //month
         if (monthIsValid) {
-            editMonth.setBackgroundColor(Color.argb(128, 50,205,50));
+            editMonth.setBackgroundColor(acceptedColorInt);
         } else {
-            editMonth.setBackgroundColor(Color.argb(128, 188,143,143));
+            editMonth.setBackgroundColor(refusedColorInt);
         }
 
         //day
         if (dayIsValid) {
-            editDay.setBackgroundColor(Color.argb(128, 50,205,50));
+            editDay.setBackgroundColor(acceptedColorInt);
         } else {
-            editDay.setBackgroundColor(Color.argb(128, 188,143,143));
+            editDay.setBackgroundColor(refusedColorInt);
         }
 
         //year
         if (yearIsValid) {
-            editYear.setBackgroundColor(Color.argb(128, 50,205,50));
+            editYear.setBackgroundColor(acceptedColorInt);
         } else {
-            editYear.setBackgroundColor(Color.argb(128, 188,143,143));
+            editYear.setBackgroundColor(refusedColorInt);
         }
 
     }

@@ -1,6 +1,5 @@
 package android.steele.siblingagetracker;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.steele.siblingagetracker.model.FamilyMember;
 import android.support.v4.content.ContextCompat;
@@ -24,13 +23,15 @@ import java.util.GregorianCalendar;
 
 public class AddFamilyMemberActivity extends AppCompatActivity {
 
+    private static final String TAG = AddFamilyMemberActivity.class.getSimpleName();
+
     public static final int MAX_YEAR = 2200;
     public static final int MIN_YEAR = 1600;
     private boolean inputIsValidated = false;
-    private EditText editName;
-    private EditText editMonth;
-    private EditText editDay;
-    private EditText editYear;
+    private EditText editNameField;
+    private EditText editMonthField;
+    private EditText editDayField;
+    private EditText editYearField;
     private Button buttonSubmit;
     private int nextFamilyMemberIndex;
     private String username = "";
@@ -42,21 +43,19 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
         username = getIntent().getStringExtra("username");
 
-        this.setTitle("Add New Sibling");
-
         buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
 //        buttonSubmit.setOnClickListener(this);
 
-        editName = (EditText) findViewById(R.id.editName);
+        editNameField = (EditText) findViewById(R.id.editName);
 
-        editMonth = (EditText) findViewById(R.id.editMonth);
-        editDay = (EditText) findViewById(R.id.editDay);
-        editYear = (EditText) findViewById(R.id.editYear);
+        editMonthField = (EditText) findViewById(R.id.editMonth);
+        editDayField = (EditText) findViewById(R.id.editDay);
+        editYearField = (EditText) findViewById(R.id.editYear);
 
         /**
          * Checking the year input is extracted to the checkInputs function
          */
-        editMonth.addTextChangedListener(new TextWatcher() {
+        editMonthField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -65,8 +64,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 checkInputs();
-                if (editMonth.getText().toString().length() == 2) {
-                    editDay.requestFocus();
+                if (editMonthField.getText().toString().length() == 2) {
+                    editDayField.requestFocus();
                 }
             }
 
@@ -79,7 +78,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         /**
          * Checking the year input is extracted to the checkInputs function
          */
-        editDay.addTextChangedListener(new TextWatcher() {
+        editDayField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -88,8 +87,8 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 checkInputs();
-                if (editDay.getText().toString().length() == 2) {
-                    editYear.requestFocus();
+                if (editDayField.getText().toString().length() == 2) {
+                    editYearField.requestFocus();
                 }
             }
 
@@ -102,7 +101,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         /**
          * Checking the year input is extracted to the checkInputs function
          */
-        editYear.addTextChangedListener(new TextWatcher() {
+        editYearField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -111,7 +110,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 checkInputs();
-//                if (editYear.getText().toString().length() == 4) {
+//                if (editYearField.getText().toString().length() == 4) {
 //                    buttonSubmit.requestFocus();
 //                }
             }
@@ -171,23 +170,21 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 
     public void checkInputs() {
 
-        boolean monthIsValid = false;
-        boolean dayIsValid = false;
-        boolean yearIsValid = false;
+        boolean monthInputIsValid = false;
+        boolean dayInputIsValid = false;
+        boolean yearInputIsValid = false;
 
 
         /**
          * Check the month
          */
-        String monthString = editMonth.getText().toString();
+        String monthString = editMonthField.getText().toString();
         Integer monthInt = 0;
         try {
-            //get it to an int
             monthInt = Integer.parseInt(monthString);
-            //check if it's within the proper range
-            monthIsValid = (monthInt < 13 && monthInt > 0);
+            monthInputIsValid = (monthInt < 13 && monthInt > 0);
         } catch (Exception ex) {
-            monthIsValid = false;
+            monthInputIsValid = false;
             monthInt = 0;
         }
 
@@ -195,25 +192,23 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
          * Check the year (PLACED IN CODE BEFORE DAY BECAUSE THE YEAR IS USED FOR LEAPYEARS..)
          */
         int yearInt = 0;
-        String yearString = editYear.getText().toString();
+        String yearString = editYearField.getText().toString();
         try {
-            //get it to an int
             yearInt = Integer.parseInt(yearString);
-            //check if it's within the proper range
-            yearIsValid = (yearInt < MAX_YEAR && yearInt > MIN_YEAR);
+            yearInputIsValid = (yearInt < MAX_YEAR && yearInt > MIN_YEAR);
         } catch (Exception ex) {
-            yearIsValid = false;
+            yearInputIsValid = false;
         }
 
         /**
          * Check the day
          */
-        String dayString = editDay.getText().toString();
+        String dayString = editDayField.getText().toString();
         try {
 
             int maxDay = 31;
             //if it's worth it to make the month match..
-            if (monthInt != 0 && monthIsValid) {
+            if (monthInt != 0 && monthInputIsValid) {
                 switch (monthInt)
                 {
                     case 1:
@@ -237,7 +232,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                         //determine if it's a leapyear
 
                         //if the year is yet determinable from the year user input
-                        if (monthInt != 0 && monthIsValid) {
+                        if (monthInt != 0 && monthInputIsValid) {
                             //if it's a leapyear
                             if (yearInt % 4 == 0) {
                                 maxDay = 29;
@@ -254,68 +249,53 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                 }
             }
 
-            //get it to an int
             int dayInt = Integer.parseInt(dayString);
-            //check if it's within the proper range
-            dayIsValid = (dayInt <= maxDay && dayInt > 0);
+            dayInputIsValid = (dayInt <= maxDay && dayInt > 0);
         } catch (Exception ex) {
-            dayIsValid = false;
+            dayInputIsValid = false;
         }
 
         //conclusion
-        inputIsValidated = (monthIsValid && dayIsValid && yearIsValid);
+        inputIsValidated = (monthInputIsValid && dayInputIsValid && yearInputIsValid);
 
-        showUserValidInputs(monthIsValid, dayIsValid, yearIsValid);
+        showUserValidInputs(monthInputIsValid, dayInputIsValid, yearInputIsValid);
 
     }
 
-    public void showUserValidInputs(boolean monthIsValid, boolean dayIsValid, boolean yearIsValid) {
-
-        //source of rgb codes: http://www.rapidtables.com/web/color/RGB_Color.htm
-            //firebrick : 178,34,34
-            //forest green : 34,139,34
-        //lime green : 50,205,50
-            //dark sea green : 143,188,143
-        //rosy brown : 188,143,143
-        //slate gray : 112,128,144
-
+    public void showUserValidInputs(boolean monthInputIsValid, boolean dayInputIsValid, boolean yearInputIsValid) {
 
         int acceptedColorInt =
             Color.argb(
-                ContextCompat.getColor(this, R.color.inputAcceptedA),
-                ContextCompat.getColor(this, R.color.inputAcceptedR),
-                ContextCompat.getColor(this, R.color.inputAcceptedG),
-                ContextCompat.getColor(this, R.color.inputAcceptedB)
+                128,
+                50,
+                205,
+                50
             );
 
         int refusedColorInt =
             Color.argb(
-                ContextCompat.getColor(this, R.color.inputRefusedA),
-                ContextCompat.getColor(this, R.color.inputRefusedR),
-                ContextCompat.getColor(this, R.color.inputRefusedG),
-                ContextCompat.getColor(this, R.color.inputRefusedB)
+                128,
+                188,
+                143,
+                143
             );
 
-
-        //month
-        if (monthIsValid) {
-            editMonth.setBackgroundColor(acceptedColorInt);
+        if (monthInputIsValid) {
+            editMonthField.setBackgroundColor(acceptedColorInt);
         } else {
-            editMonth.setBackgroundColor(refusedColorInt);
+            editMonthField.setBackgroundColor(refusedColorInt);
         }
 
-        //day
-        if (dayIsValid) {
-            editDay.setBackgroundColor(acceptedColorInt);
+        if (dayInputIsValid) {
+            editDayField.setBackgroundColor(acceptedColorInt);
         } else {
-            editDay.setBackgroundColor(refusedColorInt);
+            editDayField.setBackgroundColor(refusedColorInt);
         }
 
-        //year
-        if (yearIsValid) {
-            editYear.setBackgroundColor(acceptedColorInt);
+        if (yearInputIsValid) {
+            editYearField.setBackgroundColor(acceptedColorInt);
         } else {
-            editYear.setBackgroundColor(refusedColorInt);
+            editYearField.setBackgroundColor(refusedColorInt);
         }
 
     }
@@ -324,11 +304,11 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         checkInputs();
         if (inputIsValidated)
         {
-            String nameString = editName.getText().toString();
+            String nameString = editNameField.getText().toString();
 
-            String monthString = editMonth.getText().toString();
-            String dayString = editDay.getText().toString();
-            String yearString = editYear.getText().toString();
+            String monthString = editMonthField.getText().toString();
+            String dayString = editDayField.getText().toString();
+            String yearString = editYearField.getText().toString();
             int monthInt = Integer.parseInt(monthString);
             monthInt = monthInt - 1; // THE MONTH IN GREGORIAN CALENDAR CLASS IS A ZERO-BASED INDEX.
                                      // AND THUS NEEDS TO BE ADJUSTED
@@ -360,8 +340,6 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
             newBirthdate.setValue(birthDateString);
 
             finish();
-//            Intent intent = new Intent(AddFamilyMemberActivity.this, MainActivity.class);
-//            startActivity(intent);
         }
     }
 
