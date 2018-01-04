@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private ListView _familyMemberListView;
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.US);
+    private static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
     private String username = "user2";
 
 
@@ -52,8 +53,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-//                Toast.makeText(MainActivity.this, "Let's add a new Family Member!!", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(MainActivity.this, DetailFamilyMemberActivity.class);
                 intent.putExtra("username", username);
@@ -83,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         FirebaseListAdapter<FamilyMemberRow> mAdapter = new FirebaseListAdapter<FamilyMemberRow>(this, FamilyMemberRow.class, R.layout.row_family_member, familyMembersRef) {
             @Override
             protected void populateView(View view, FamilyMemberRow myFamilyMemberRow, int position) {
-                //Set the value for the views
 
                 /**
                  * SET THE NAME
