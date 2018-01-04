@@ -3,6 +3,7 @@ package android.steele.siblingagetracker;
 import android.content.Intent;
 import android.graphics.Color;
 import android.steele.siblingagetracker.model.FamilyMember;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -279,25 +280,42 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         //slate gray : 112,128,144
 
 
+        int acceptedColorInt =
+            Color.argb(
+                ContextCompat.getColor(this, R.color.inputAcceptedA),
+                ContextCompat.getColor(this, R.color.inputAcceptedR),
+                ContextCompat.getColor(this, R.color.inputAcceptedG),
+                ContextCompat.getColor(this, R.color.inputAcceptedB)
+            );
+
+        int refusedColorInt =
+            Color.argb(
+                ContextCompat.getColor(this, R.color.inputRefusedA),
+                ContextCompat.getColor(this, R.color.inputRefusedR),
+                ContextCompat.getColor(this, R.color.inputRefusedG),
+                ContextCompat.getColor(this, R.color.inputRefusedB)
+            );
+
+
         //month
         if (monthIsValid) {
-            editMonth.setBackgroundColor(Color.argb(128, 50,205,50));
+            editMonth.setBackgroundColor(acceptedColorInt);
         } else {
-            editMonth.setBackgroundColor(Color.argb(128, 188,143,143));
+            editMonth.setBackgroundColor(refusedColorInt);
         }
 
         //day
         if (dayIsValid) {
-            editDay.setBackgroundColor(Color.argb(128, 50,205,50));
+            editDay.setBackgroundColor(acceptedColorInt);
         } else {
-            editDay.setBackgroundColor(Color.argb(128, 188,143,143));
+            editDay.setBackgroundColor(refusedColorInt);
         }
 
         //year
         if (yearIsValid) {
-            editYear.setBackgroundColor(Color.argb(128, 50,205,50));
+            editYear.setBackgroundColor(acceptedColorInt);
         } else {
-            editYear.setBackgroundColor(Color.argb(128, 188,143,143));
+            editYear.setBackgroundColor(refusedColorInt);
         }
 
     }
