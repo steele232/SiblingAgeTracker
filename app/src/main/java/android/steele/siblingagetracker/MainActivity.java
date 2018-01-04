@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.title_main);
+//        toolbar.setTitle(R.string.title_main);
 //        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabEdit);
@@ -207,28 +207,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 String nameToKeep = "";
                 GregorianCalendar birthdateToKeep = new GregorianCalendar();
 
-//                int childrenCount = (int) dataSnapshot.getChildrenCount();
                 Iterable<DataSnapshot> familyMemberCollection = dataSnapshot.getChildren();
                 int i = 0;
                 for (DataSnapshot snapshot : familyMemberCollection) {
                     //if it's the right position...
                     if (i == position) {
                         //get the data, for repopulation
-                        String key = snapshot.getKey();
-                        String name = (String) snapshot.child("name").getValue();
-                        GregorianCalendar birthdate = gson.fromJson(snapshot.child("birthdate").getValue().toString(), GregorianCalendar.class);
+                        keyToKeep = snapshot.getKey();
+                        nameToKeep = (String) snapshot.child("name").getValue();
+                        birthdateToKeep = gson.fromJson(snapshot.child("birthdate").getValue().toString(), GregorianCalendar.class);
 
-                        keyToKeep = key;
-                        nameToKeep = name;
-                        birthdateToKeep = birthdate;
-
-                        Log.e("DATA", key);
-                        Log.e("DATA", name);
-                        Log.e("DATA", birthdate.toString());
+                        Log.e("DATA", keyToKeep);
+                        Log.e("DATA", nameToKeep);
+                        Log.e("DATA", birthdateToKeep.toString());
                         Log.e("DATA", Integer.toString(position));
 
-                        Log.e("TESTING", snapshot.getKey());
-                        Log.e("TESTING", snapshot.getValue().toString());
                     }
                     i++;
                 }
