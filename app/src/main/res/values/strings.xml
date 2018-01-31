@@ -9,4 +9,10 @@
 
     <string name="instructions_notification_settings">How early do you want your notifications?</string>
     <string name="name_to_edit">EDIT_ME</string>
+
+    <string name="preferencesKey">app_preferences_key</string>
+    <string name="app_data_key">app_data_kay</string>
+
+
 </resources>
+
