@@ -18,25 +18,10 @@ import com.google.gson.Gson;
 
 public class AppDataStore {
 
-    private static String appDataJson = null;
-    private static AppData appData = null;
-
+    // Singleton
     private static AppDataStore single_instance = null;
 
-    private AppDataStore(Context context) {
-
-        Gson gson = new Gson();
-
-        String appDataJson = context
-            .getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
-            .getString(context.getString(R.string.title_main), "");
-
-        if (appDataJson.isEmpty()) {
-            appData = new AppData();
-        } else {
-            appData = gson.fromJson(appDataJson, AppData.class);
-        }
-    }
+    private AppDataStore(Context context) {  }
 
     public static AppDataStore getInstance(Context context) {
 
@@ -47,6 +32,22 @@ public class AppDataStore {
         return single_instance;
     }
 
+    // Load
+    public static AppData load(Context context) {
+
+        Gson gson = new Gson();
+
+        String appDataJson = context
+                .getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
+                .getString(context.getString(R.string.title_main), "");
+
+        if (appDataJson.isEmpty()) {
+            return new AppData();
+        } else {
+            return gson.fromJson(appDataJson, AppData.class);
+        }
+
+    }
 
     // Save
     public static void save(Context context, AppData appData) {
@@ -58,10 +59,6 @@ public class AppDataStore {
             .apply();
     }
 
-    // Load
-    public static AppData load(Context context) {
-        return getInstance(context).appData;
-    }
 
 
 
