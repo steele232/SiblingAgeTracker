@@ -74,74 +74,56 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         super.onStart();
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference(username);
-        DatabaseReference familyMembersRef = userRef.child("familyMembers");
 
-        FirebaseListAdapter<FamilyMemberRow> mAdapter = new FirebaseListAdapter<FamilyMemberRow>(this, FamilyMemberRow.class, R.layout.row_family_member, familyMembersRef) {
-            @Override
-            protected void populateView(View view, FamilyMemberRow myFamilyMemberRow, int position) {
-
-                /**
-                 * SET THE NAME
-                 */
-                ((TextView)view.findViewById(R.id.name)).setText(myFamilyMemberRow.name);
-
-                /**
-                 * SET THE BIRTHDATE
-                 */
-                Gson gson = new Gson();
-                GregorianCalendar calendar = gson.fromJson(myFamilyMemberRow.birthdate, GregorianCalendar.class);
-
-                int birthMonth = calendar.get(GregorianCalendar.MONTH);
-                int birthDay = calendar.get(GregorianCalendar.DAY_OF_MONTH);
-                int birthYear = calendar.get(GregorianCalendar.YEAR);
-
-                ((TextView)view.findViewById(R.id.birthdate)).setText(
-                        localizedDateFormatter.format(calendar.getTime())
-                );
+        //TODO Load up the ListAdapter and link it to Data.
 
 
-                /**
-                 * CALCULATE THE AGE OF THE FAMILY MEMBER
-                 */
-                final Calendar now = Calendar.getInstance();
-                int currentYear = now.get(Calendar.YEAR);
-                int currentMonth = now.get(Calendar.MONTH);
-                int currentDay = now.get(Calendar.DAY_OF_MONTH);
 
-                //calculating the differences
-                int yearDifference = currentYear - birthYear;
-                int monthDifference = currentMonth - birthMonth;
-                int dayDifference = currentDay - birthDay;
 
-                //whether the last year should be counted...
-                //if we've past the birthday of the year, we count the last year.
-                //if we've NOT past the birthday of the year, we do not count the last year.
-                int negativeOffset = 1;
-                //we will subtract 1 from the yearDifference (to end up with the age in years) if we haven't come upon the birthday yet.
-                if (
-                    birthMonth < currentMonth ||
-                        (
-                            currentMonth == birthMonth &&
-                            currentDay >= birthDay
-                        )
-                    )
-                {
-                    //we HAVE passed the birthDay this year, so we will NOT subtract 1 from the yearDifference.
-                    //If so, the yearDifference IS the age.
-                    negativeOffset = 0;
-                }
-                int age = yearDifference - negativeOffset;
 
-                TextView ageView = (TextView) view.findViewById(R.id.age);
-                ageView.setText(Integer.toString(age));
 
-            }
 
-        };
-        _familyMemberListView.setAdapter(mAdapter);
-        _familyMemberListView.setOnItemClickListener(this);
+
+
+
+
+
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference userRef = database.getReference(username);
+//        DatabaseReference familyMembersRef = userRef.child("familyMembers");
+//
+//        FirebaseListAdapter<FamilyMemberRow> mAdapter = new FirebaseListAdapter<FamilyMemberRow>(this, FamilyMemberRow.class, R.layout.row_family_member, familyMembersRef) {
+//            @Override
+//            protected void populateView(View view, FamilyMemberRow myFamilyMemberRow, int position) {
+//
+//                /**
+//                 * SET THE NAME
+//                 */
+//                ((TextView)view.findViewById(R.id.name)).setText(myFamilyMemberRow.name);
+//
+//                /**
+//                 * SET THE BIRTHDATE
+//                 */
+//                Gson gson = new Gson();
+//                GregorianCalendar calendar = gson.fromJson(myFamilyMemberRow.birthdate, GregorianCalendar.class);
+//
+//                int birthMonth = calendar.get(GregorianCalendar.MONTH);
+//                int birthDay = calendar.get(GregorianCalendar.DAY_OF_MONTH);
+//                int birthYear = calendar.get(GregorianCalendar.YEAR);
+//
+//                ((TextView)view.findViewById(R.id.birthdate)).setText(
+//                        localizedDateFormatter.format(calendar.getTime())
+//                );
+//
+//
+//                TextView ageView = (TextView) view.findViewById(R.id.age);
+//                ageView.setText(Integer.toString(age));
+//
+//            }
+//
+//        };
+//        _familyMemberListView.setAdapter(mAdapter);
+//        _familyMemberListView.setOnItemClickListener(this);
 
     }
 
@@ -191,6 +173,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         Log.e("Testing", "You clicked Item: " + id + " at position:" + position);
+
+        //TODO Handle clicking on and editing an item/row
+
+
+
+
+
+
+
+
+
+
+
+
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userRef = database.getReference(username);

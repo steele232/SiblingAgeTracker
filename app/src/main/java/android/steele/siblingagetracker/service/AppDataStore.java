@@ -2,6 +2,7 @@ package android.steele.siblingagetracker.service;
 
 import android.content.Context;
 import android.steele.siblingagetracker.R;
+import android.support.v4.content.ContextCompat;
 
 import com.google.gson.Gson;
 
@@ -23,8 +24,6 @@ public class AppDataStore {
     private static AppDataStore single_instance = null;
 
     private AppDataStore(Context context) {
-        //get the Data? YES
-        //There may be problems, but we will ignore them for now.
 
         Gson gson = new Gson();
 
@@ -37,11 +36,6 @@ public class AppDataStore {
         } else {
             appData = gson.fromJson(appDataJson, AppData.class);
         }
-
-
-
-
-
     }
 
     public static AppDataStore getInstance(Context context) {
@@ -55,19 +49,20 @@ public class AppDataStore {
 
 
     // Save
+    public static void save(Context context, AppData appData) {
+        Gson gson = new Gson();
+        context
+            .getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
+            .edit()
+            .putString(context.getString(R.string.title_main), gson.toJson(appData))
+            .apply();
+    }
 
     // Load
+    public static AppData load(Context context) {
+        return getInstance(context).appData;
+    }
 
-    // Load Asynchronously - for Init
-
-
-    // Read / Find
-
-    // Add
-
-    // Update
-
-    // Delete
 
 
 }
