@@ -2,7 +2,10 @@ package android.steele.siblingagetracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.steele.siblingagetracker.adapters.FamilyMemberAdapter;
+import android.steele.siblingagetracker.model.FamilyMember;
 import android.steele.siblingagetracker.model.FamilyMemberRow;
+import android.steele.siblingagetracker.service.Mockstore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -32,8 +36,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private ListView _familyMemberListView;
-    private static final DateFormat localizedDateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
     private String username = "user2";
+    private ArrayList<FamilyMember> _familyMembers;
 
 
     /**
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         _familyMemberListView = (ListView) findViewById(R.id.familyMembersList);
+        _familyMembers = Mockstore.getList();
     }
 
     /**
@@ -75,55 +80,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onStart();
 
 
-        //TODO Load up the ListAdapter and link it to Data.
-
-
-
-
-
-
-
-
-
-
-
-
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference userRef = database.getReference(username);
-//        DatabaseReference familyMembersRef = userRef.child("familyMembers");
-//
-//        FirebaseListAdapter<FamilyMemberRow> mAdapter = new FirebaseListAdapter<FamilyMemberRow>(this, FamilyMemberRow.class, R.layout.row_family_member, familyMembersRef) {
-//            @Override
-//            protected void populateView(View view, FamilyMemberRow myFamilyMemberRow, int position) {
-//
-//                /**
-//                 * SET THE NAME
-//                 */
-//                ((TextView)view.findViewById(R.id.name)).setText(myFamilyMemberRow.name);
-//
-//                /**
-//                 * SET THE BIRTHDATE
-//                 */
-//                Gson gson = new Gson();
-//                GregorianCalendar calendar = gson.fromJson(myFamilyMemberRow.birthdate, GregorianCalendar.class);
-//
-//                int birthMonth = calendar.get(GregorianCalendar.MONTH);
-//                int birthDay = calendar.get(GregorianCalendar.DAY_OF_MONTH);
-//                int birthYear = calendar.get(GregorianCalendar.YEAR);
-//
-//                ((TextView)view.findViewById(R.id.birthdate)).setText(
-//                        localizedDateFormatter.format(calendar.getTime())
-//                );
-//
-//
-//                TextView ageView = (TextView) view.findViewById(R.id.age);
-//                ageView.setText(Integer.toString(age));
-//
-//            }
-//
-//        };
-//        _familyMemberListView.setAdapter(mAdapter);
-//        _familyMemberListView.setOnItemClickListener(this);
+        //Load up the ListAdapter and link it to Data.
+        FamilyMemberAdapter adapter = new FamilyMemberAdapter(MainActivity.this, R.layout.row_family_member, _familyMembers);
+        _familyMemberListView.setAdapter(adapter);
+        _familyMemberListView.setOnItemClickListener(this);
 
     }
 
@@ -164,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     /**
-     *
+     * Handle clicking on and editing an item/row
      * @param parent
      * @param view
      * @param position
@@ -174,85 +134,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         Log.e("Testing", "You clicked Item: " + id + " at position:" + position);
 
-        //TODO Handle clicking on and editing an item/row
-
-
-
-
-
-
-
-
-
-
-
-
-
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference(username);
-        DatabaseReference familyMembersRef = userRef.child("familyMembers");
-
-
-        familyMembersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Gson gson = new Gson();
-
-                String keyToKeep = "";
-                String nameToKeep = "";
-                GregorianCalendar birthdateToKeep = new GregorianCalendar();
-
-                Iterable<DataSnapshot> familyMemberCollection = dataSnapshot.getChildren();
-                int i = 0;
-                for (DataSnapshot snapshot : familyMemberCollection) {
-                    //if it's the right position...
-                    if (i == position) {
-                        //get the data, for repopulation
-                        keyToKeep = snapshot.getKey();
-                        nameToKeep = (String) snapshot.child("name").getValue();
-                        birthdateToKeep = gson.fromJson(snapshot.child("birthdate").getValue().toString(), GregorianCalendar.class);
-
-                        Log.e("DATA", keyToKeep);
-                        Log.e("DATA", nameToKeep);
-                        Log.e("DATA", birthdateToKeep.toString());
-                        Log.e("DATA", Integer.toString(position));
-
-                    }
-                    i++;
-                }
-                callbackGoToEdit(
-                        keyToKeep,
-                        nameToKeep,
-                        birthdateToKeep);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }
-
-    private void callbackGoToEdit(
-            String key,
-            String name,
-            GregorianCalendar birthdate
-    ) {
+        FamilyMember familyMember = _familyMembers.get(position);
 
         Log.i(TAG, "Start of callback");
         Intent intent = new Intent(MainActivity.this , DetailFamilyMemberActivity.class);
         intent.putExtra("username", username);
-        intent.putExtra("key", key);
-        intent.putExtra("name", name);
+        intent.putExtra("key", position);
+        intent.putExtra("name", familyMember.name);
         Gson gson = new Gson();
 
-        intent.putExtra("birthdate", gson.toJson(birthdate));
+        intent.putExtra("birthdate", gson.toJson(familyMember.birthdate));
         startActivity(intent);
         Log.i(TAG, "End of callback");
-    }
 
+    }
 
 }

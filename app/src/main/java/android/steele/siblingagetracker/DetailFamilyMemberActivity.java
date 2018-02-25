@@ -1,46 +1,44 @@
 package android.steele.siblingagetracker;
 
-import android.graphics.Color;
-import android.steele.siblingagetracker.model.FamilyMember;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
-public class DetailFamilyMemberActivity extends AppCompatActivity {
+public class DetailFamilyMemberActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private static final String TAG = DetailFamilyMemberActivity.class.getSimpleName();
+
+    private static final DateFormat localizedDateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
 
     public static final int MAX_YEAR = 2200;
     public static final int MIN_YEAR = 1600;
     private boolean inputIsValidated = false;
-    private EditText editNameField;
-    private EditText editMonthField;
-    private EditText editDayField;
-    private EditText editYearField;
-    private int nextFamilyMemberIndex;
 
     private boolean isInEdittingMode = false;
 
+    private EditText editName;
+    private TextView textBirthdate;
+
     private String _username = "";
-    private String _keyToEdit = "";
+    private int _keyToEdit;
     private String _name = "";
     private GregorianCalendar _birthdate = new GregorianCalendar();
 
@@ -48,15 +46,15 @@ public class DetailFamilyMemberActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_detail_family_member);
         if (getIntent().hasExtra("key")) {
             isInEdittingMode = true;
         }
         if (isInEdittingMode) {
-            setContentView(R.layout.activity_edit_family_member);
             setTitle(R.string.title_edit);
         } else {
-            setContentView(R.layout.activity_add_family_member);
             setTitle(R.string.title_add);
+            _birthdate = new GregorianCalendar();
         }
 
         Gson gson = new Gson();
@@ -66,122 +64,34 @@ public class DetailFamilyMemberActivity extends AppCompatActivity {
         _username = getIntent().getStringExtra("username");
 
         if (getIntent().hasExtra("key")) {
-            _keyToEdit = getIntent().getStringExtra("key");
-            Log.e("DATA", _keyToEdit);
+            _keyToEdit = getIntent().getIntExtra("key", 0);
+            Log.e(TAG, String.valueOf(_keyToEdit));
         }
         if (getIntent().hasExtra("name")) {
             _name = getIntent().getStringExtra("name");
-            Log.e("DATA", _name);
+            Log.e(TAG, _name);
         }
         if (getIntent().hasExtra("birthdate")) {
             String birthdateString = getIntent().getStringExtra("birthdate");
             _birthdate = gson.fromJson(birthdateString, GregorianCalendar.class);
-            Log.e("DATA", _birthdate.toString());
+            Log.e(TAG, _birthdate.toString());
         }
 
-
-        editNameField = (EditText) findViewById(R.id.editName);
-
-        editMonthField = (EditText) findViewById(R.id.editMonth);
-        editDayField = (EditText) findViewById(R.id.editDay);
-        editYearField = (EditText) findViewById(R.id.editYear);
+        collectReferences();
+        setFormData();
 
 
-        if (isInEdittingMode) {
-            editNameField.setText(_name);
-            editMonthField.setText(Integer.toString(_birthdate.get(Calendar.MONTH) + 1));
-            editDayField.setText(Integer.toString(_birthdate.get(Calendar.DAY_OF_MONTH)));
-            editYearField.setText(Integer.toString(_birthdate.get(Calendar.YEAR)));
-        }
 
-        editMonthField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
 
-            }
+    private void collectReferences() {
+        editName = (EditText) findViewById(R.id.editName);
+        textBirthdate = (TextView) findViewById(R.id.textBirthdayDisplay);
+    }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                checkInputs();
-                if (editMonthField.getText().toString().length() == 2) {
-                    editDayField.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        editDayField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                checkInputs();
-                if (editDayField.getText().toString().length() == 2) {
-                    editYearField.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        editYearField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                checkInputs();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference(_username);
-        Log.d("TAG", userRef.getKey().toString());
-
-        DatabaseReference familyMembersRef = userRef.child("familyMembers");
-        //https://firebase.google.com/docs/database/android/read-and-write
-        familyMembersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int childrentCount = (int) dataSnapshot.getChildrenCount();
-                int greatestIndex = -1;
-                nextFamilyMemberIndex = -1;
-                for (int i = 0; i < childrentCount; i++) {
-                    if (dataSnapshot.child("familyMember" + i).exists()) {
-                        greatestIndex = i;
-                    } else {
-                        nextFamilyMemberIndex = i;
-                    }
-                }
-                if (nextFamilyMemberIndex == -1) {
-                    nextFamilyMemberIndex = greatestIndex + 1;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+    private void setFormData() {
+        editName.setText(_name);
+        textBirthdate.setText(localizedDateFormatter.format(_birthdate.getTime()));
     }
 
     @Override
@@ -201,15 +111,9 @@ public class DetailFamilyMemberActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.action_delete) {
             Log.i(TAG, "Got to the delete click event");
 
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference userRef = database.getReference(_username);
-            Log.i(TAG, userRef.getKey().toString());
 
-            DatabaseReference familyMembersRef = userRef.child("familyMembers");
-
-            DatabaseReference editFamilyMemberRef = familyMembersRef.child(_keyToEdit);
-            editFamilyMemberRef.removeValue();
-
+            //TODO DELETE THE THING #Architecture Stuff...
+            //
             finish();
 
         } else {
@@ -220,207 +124,105 @@ public class DetailFamilyMemberActivity extends AppCompatActivity {
     }
 
 
+    public void showDatePickerDialog(View v) {
+        DatePickerFragment newFragment;
+        newFragment = DatePickerFragment.newInstance(
+                new Date(
+                        _birthdate.get(Calendar.YEAR),
+                        _birthdate.get(Calendar.MONTH),
+                        _birthdate.get(Calendar.DAY_OF_MONTH)
+                ),
+                this
+        );
 
-    /**
-     *
-     */
-    public void checkInputs() {
-
-        boolean monthInputIsValid = false;
-        boolean dayInputIsValid = false;
-        boolean yearInputIsValid = false;
-
-        /**
-         * Check the month
-         */
-        String monthString = editMonthField.getText().toString();
-        Integer monthInt = 0;
-        try {
-            monthInt = Integer.parseInt(monthString);
-            monthInputIsValid = (monthInt < 13 && monthInt > 0);
-        } catch (Exception ex) {
-            monthInputIsValid = false;
-            monthInt = 0;
-        }
-
-        /**
-         * Check the year (PLACED IN CODE BEFORE DAY BECAUSE THE YEAR IS
-         * USED FOR CALCULATING MONTHS WHICH MIGHT INVOLVES LEAPYEARS..)
-         */
-        int yearInt = 0;
-        String yearString = editYearField.getText().toString();
-        try {
-            yearInt = Integer.parseInt(yearString);
-            yearInputIsValid = (yearInt < MAX_YEAR && yearInt > MIN_YEAR);
-        } catch (Exception ex) {
-            yearInputIsValid = false;
-        }
-
-        /**
-         * Check the day
-         */
-        String dayString = editDayField.getText().toString();
-        try {
-
-            int maxDay = 31;
-            //if it's worth it to make the month match..
-            if (monthInt != 0 && monthInputIsValid) {
-                switch (monthInt)
-                {
-                    case 1:
-                    case 3:
-                    case 5:
-                    case 7:
-                    case 8:
-                    case 10:
-                    case 12:
-                        maxDay = 31;
-                        break;
-
-                    case 6:
-                    case 4:
-                    case 9:
-                    case 11:
-                        maxDay = 30;
-                        break;
-
-                    case 2:
-                        //determine if it's a leapyear
-
-                        //if the year is yet determinable from the year user input
-                        if (monthInt != 0 && monthInputIsValid) {
-                            //if it's a leapyear
-                            if (yearInt % 4 == 0) {
-                                maxDay = 29;
-                            } else {
-                                maxDay = 28;
-                            }
-                        } else {
-                            maxDay = 28;
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            int dayInt = Integer.parseInt(dayString);
-            dayInputIsValid = (dayInt <= maxDay && dayInt > 0);
-        } catch (Exception ex) {
-            dayInputIsValid = false;
-        }
-
-        inputIsValidated = (monthInputIsValid && dayInputIsValid && yearInputIsValid);
-
-        showUserValidInputs(monthInputIsValid, dayInputIsValid, yearInputIsValid);
-
+        newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     /**
-     *
-     * @param monthInputIsValid
-     * @param dayInputIsValid
-     * @param yearInputIsValid
-     */
-    public void showUserValidInputs(boolean monthInputIsValid,
-                                    boolean dayInputIsValid,
-                                    boolean yearInputIsValid) {
-
-        int acceptedColorInt =
-            Color.argb(
-                128,
-                50,
-                205,
-                50
-            );
-
-        int refusedColorInt =
-            Color.argb(
-                128,
-                188,
-                143,
-                143
-            );
-
-        if (monthInputIsValid) {
-            editMonthField.setBackgroundColor(acceptedColorInt);
-        } else {
-            editMonthField.setBackgroundColor(refusedColorInt);
-        }
-
-        if (dayInputIsValid) {
-            editDayField.setBackgroundColor(acceptedColorInt);
-        } else {
-            editDayField.setBackgroundColor(refusedColorInt);
-        }
-
-        if (yearInputIsValid) {
-            editYearField.setBackgroundColor(acceptedColorInt);
-        } else {
-            editYearField.setBackgroundColor(refusedColorInt);
-        }
-
-    }
-
-    /**
-     *
+     * Submit Button is Pressed and gets us back
+     * to Main Activity and ready for saving the data.
      * @param v
      */
-    public void onClick(View v) {
-        checkInputs();
-        if (inputIsValidated)
-        {
-            String nameString = editNameField.getText().toString();
+    public void onFormSubmit(View v) {
 
-            String monthString = editMonthField.getText().toString();
-            String dayString = editDayField.getText().toString();
-            String yearString = editYearField.getText().toString();
-            int monthInt = Integer.parseInt(monthString);
-            monthInt = monthInt - 1; // THE MONTH IN GREGORIAN CALENDAR CLASS IS A ZERO-BASED INDEX.
-                                     // AND THUS NEEDS TO BE ADJUSTED
-            int dayInt = Integer.parseInt(dayString);
-            int yearInt = Integer.parseInt(yearString);
-            GregorianCalendar birthdate = new GregorianCalendar();
-            birthdate.set(yearInt, monthInt, dayInt); //year, month, date
+        //What about empty name field?
+        //Let's not save it.. Just finish() :D
 
-            FamilyMember newFM = new FamilyMember();
-            newFM.birthdate = birthdate;
-            newFM.name = nameString;
 
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference userRef = database.getReference("user2");
-            Log.d("TAG", userRef.getKey().toString());
-
-            DatabaseReference familyMembersRef = userRef.child("familyMembers");
-
-            if (isInEdittingMode) {
-
-                DatabaseReference toBeEdittedFamilyMemberRef = familyMembersRef.child(_keyToEdit);
-                DatabaseReference toBeEdittedNameRef = toBeEdittedFamilyMemberRef.child("name");
-                toBeEdittedNameRef.setValue(newFM.name);
-
-                DatabaseReference toBeEdittedBirthdate = toBeEdittedFamilyMemberRef.child("birthdate");
-                Gson gson = new Gson();
-                String birthDateString = gson.toJson(newFM.birthdate);
-                toBeEdittedBirthdate.setValue(birthDateString);
-
-            } else { //adding
-
-                DatabaseReference newFamilyMemberRef = familyMembersRef.child("familyMember" + nextFamilyMemberIndex);
-                DatabaseReference newNameRef = newFamilyMemberRef.child("name");
-                newNameRef.setValue(newFM.name);
-
-                DatabaseReference newBirthdate = newFamilyMemberRef.child("birthdate");
-                Gson gson = new Gson();
-                String birthDateString = gson.toJson(newFM.birthdate);
-                newBirthdate.setValue(birthDateString);
-            }
-
-            finish();
-        }
+        finish();
     }
 
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        Log.i(TAG, "Date has been Set!!");
+        Log.i(TAG, "Year : " + year + " Month : " + month + " Day : " + day);
+        //Remember that the month comes out in 0-11;
+        //but so does Calendar, it's 1:1
+        _birthdate.set(Calendar.YEAR, year);
+        _birthdate.set(Calendar.MONTH, month);
+        _birthdate.set(Calendar.DAY_OF_MONTH, day);
+        Date date = new Date(year, month, day);
+        Log.i(TAG, localizedDateFormatter.format(date));
+
+        textBirthdate.setText(localizedDateFormatter.format(date));
+
+    }
+
+    //TODO  How do I autofill the date when it's and EDIT mode? (Difficult Context?)
+    //TODO Update the TextView (Difficult Context?)
+
+    public static String BIRTHDAY_BUNDLE_KEY = "MOVE";
+
+
+
+    public static class DatePickerFragment extends DialogFragment{
+
+        private DatePickerDialog.OnDateSetListener onDateSetListener;
+
+        static DatePickerFragment newInstance(Date date, DatePickerDialog.OnDateSetListener onDateSetListener) {
+
+            DatePickerFragment pickerFragment = new DatePickerFragment();
+
+            pickerFragment.setOnDateSetListener(onDateSetListener);
+
+            //Pass the date in a bundle.
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(BIRTHDAY_BUNDLE_KEY, date);
+            pickerFragment.setArguments(bundle);
+            return pickerFragment;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            super.onCreateDialog(savedInstanceState);
+
+            Date initialDate = (Date) getArguments().getSerializable(BIRTHDAY_BUNDLE_KEY);
+            Calendar calendar = Calendar.getInstance();
+//            DatePickerDialog dialog = new DatePickerDialog(
+//                    getActivity(),
+//                    onDateSetListener,
+//                    initialDate.getYear(),
+//                    initialDate.getMonth(),
+//                    initialDate.getDay()
+//            );
+            DatePickerDialog dialog = new DatePickerDialog(
+                    getActivity(),
+                    onDateSetListener,
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            );
+            return dialog;
+        }
+
+        private void setOnDateSetListener(DatePickerDialog.OnDateSetListener listener) {
+            this.onDateSetListener = listener;
+        }
+
+    }
 
 
 }
+
+
+
