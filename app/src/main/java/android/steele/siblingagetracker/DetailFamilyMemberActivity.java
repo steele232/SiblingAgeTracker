@@ -162,10 +162,10 @@ public class DetailFamilyMemberActivity extends AppCompatActivity implements Dat
         _birthdate.set(Calendar.YEAR, year);
         _birthdate.set(Calendar.MONTH, month);
         _birthdate.set(Calendar.DAY_OF_MONTH, day);
-        Date date = new Date(year, month, day);
-        Log.i(TAG, localizedDateFormatter.format(date));
+//        Date date = new Date(year, month, day);
+//        Log.i(TAG, localizedDateFormatter.format());
 
-        textBirthdate.setText(localizedDateFormatter.format(date));
+        textBirthdate.setText(localizedDateFormatter.format(_birthdate.getTime()));
 
     }
 
