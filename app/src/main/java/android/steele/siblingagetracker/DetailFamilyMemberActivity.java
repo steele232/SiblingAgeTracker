@@ -148,6 +148,7 @@ public class DetailFamilyMemberActivity extends AppCompatActivity implements Dat
         //What about empty name field?
         //Let's not save it.. Just finish() :D
 
+        //TODO Make the Save happen #Architecture Stuff...
 
         finish();
     }
@@ -169,7 +170,6 @@ public class DetailFamilyMemberActivity extends AppCompatActivity implements Dat
     }
 
     //TODO  How do I autofill the date when it's and EDIT mode? (Difficult Context?)
-    //TODO Update the TextView (Difficult Context?)
 
     public static String BIRTHDAY_BUNDLE_KEY = "MOVE";
 
