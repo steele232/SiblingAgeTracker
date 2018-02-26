@@ -41,6 +41,7 @@ public class DetailFamilyMemberActivity extends AppCompatActivity implements Dat
     private int _keyToEdit;
     private String _name = "";
     private GregorianCalendar _birthdate = new GregorianCalendar();
+    private Date thisDate;
 
 
     @Override
@@ -126,11 +127,12 @@ public class DetailFamilyMemberActivity extends AppCompatActivity implements Dat
 
     public void showDatePickerDialog(View v) {
         DatePickerFragment newFragment;
+        Log.i(TAG, "Date I'm giving the Dialog: " +
+                localizedDateFormatter.format(_birthdate.getTime())
+        );
         newFragment = DatePickerFragment.newInstance(
                 new Date(
-                        _birthdate.get(Calendar.YEAR),
-                        _birthdate.get(Calendar.MONTH),
-                        _birthdate.get(Calendar.DAY_OF_MONTH)
+                        _birthdate.getTimeInMillis() //TODO REMEMBER THIS!!! Don't use Deprecated Constructor w/ y/m/d
                 ),
                 this
         );
@@ -187,6 +189,9 @@ public class DetailFamilyMemberActivity extends AppCompatActivity implements Dat
 
             //Pass the date in a bundle.
             Bundle bundle = new Bundle();
+            Log.i(TAG, "Date before Serialize: " +
+                    localizedDateFormatter.format(date)
+            );
             bundle.putSerializable(BIRTHDAY_BUNDLE_KEY, date);
             pickerFragment.setArguments(bundle);
             return pickerFragment;
@@ -197,14 +202,16 @@ public class DetailFamilyMemberActivity extends AppCompatActivity implements Dat
             super.onCreateDialog(savedInstanceState);
 
             Date initialDate = (Date) getArguments().getSerializable(BIRTHDAY_BUNDLE_KEY);
+            Log.i(TAG, "Date AFTER Serializing: " +
+                    localizedDateFormatter.format(initialDate)
+            );
+
             Calendar calendar = Calendar.getInstance();
-//            DatePickerDialog dialog = new DatePickerDialog(
-//                    getActivity(),
-//                    onDateSetListener,
-//                    initialDate.getYear(),
-//                    initialDate.getMonth(),
-//                    initialDate.getDay()
-//            );
+            calendar.setTimeInMillis(initialDate.getTime());
+
+            Log.i(TAG, "Initial Year : " + calendar.get(Calendar.YEAR));
+            Log.i(TAG, "Initial Month : " + calendar.get(Calendar.MONTH));
+            Log.i(TAG, "Initial Day : " + calendar.get(Calendar.DAY_OF_MONTH));
             DatePickerDialog dialog = new DatePickerDialog(
                     getActivity(),
                     onDateSetListener,
@@ -212,6 +219,13 @@ public class DetailFamilyMemberActivity extends AppCompatActivity implements Dat
                     calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH)
             );
+//            DatePickerDialog dialog = new DatePickerDialog(
+//                    getActivity(),
+//                    onDateSetListener,
+//                    calendar.get(Calendar.YEAR),
+//                    calendar.get(Calendar.MONTH),
+//                    calendar.get(Calendar.DAY_OF_MONTH)
+//            );
             return dialog;
         }
 
