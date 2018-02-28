@@ -1,24 +1,16 @@
 package android.steele.siblingagetracker.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.steele.siblingagetracker.MainActivity;
 import android.steele.siblingagetracker.R;
 import android.steele.siblingagetracker.model.FamilyMember;
 import android.steele.siblingagetracker.service.AgeCalculator;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;

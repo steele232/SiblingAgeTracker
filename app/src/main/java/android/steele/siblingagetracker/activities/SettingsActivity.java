@@ -1,5 +1,6 @@
-package android.steele.siblingagetracker;
+package android.steele.siblingagetracker.activities;
 
+import android.steele.siblingagetracker.R;
 import android.steele.siblingagetracker.model.UserPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

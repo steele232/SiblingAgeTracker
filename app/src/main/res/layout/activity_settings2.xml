@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="android.steele.siblingagetracker.SettingsActivity">
+    tools:context="android.steele.siblingagetracker.activities.SettingsActivity">
 
     <Switch
         android:id="@+id/switchBirthdayNotifications"

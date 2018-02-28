@@ -1,10 +1,10 @@
-package android.steele.siblingagetracker;
+package android.steele.siblingagetracker.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.steele.siblingagetracker.R;
 import android.steele.siblingagetracker.adapters.FamilyMemberAdapter;
 import android.steele.siblingagetracker.model.FamilyMember;
-import android.steele.siblingagetracker.model.FamilyMemberRow;
 import android.steele.siblingagetracker.service.Mockstore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -15,21 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
