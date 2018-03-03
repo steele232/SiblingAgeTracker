@@ -1,11 +1,16 @@
 package android.steele.siblingagetracker.activities;
 
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.steele.siblingagetracker.R;
 import android.steele.siblingagetracker.adapters.FamilyMemberAdapter;
 import android.steele.siblingagetracker.model.FamilyMember;
 import android.steele.siblingagetracker.service.Mockstore;
+import android.steele.siblingagetracker.viewmodels.MainView;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,19 +25,21 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity
+        implements AdapterView.OnItemClickListener, LifecycleOwner {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private ListView _familyMemberListView;
     private String username = "user2";
-    private ArrayList<FamilyMember> _familyMembers;
+//    private ArrayList<FamilyMember> _familyMembers;
+
+    private MainView _mainView;
 
 
-    /**
-     *
-     * @param savedInstanceState
-     */
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +47,34 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_main);
 //        setSupportActionBar(toolbar);
+
+
+
+        /* TODO ARCHITECTURE */
+        _mainView = ViewModelProviders.of(this).get(MainView.class);
+
+        _familyMemberListView = (ListView) findViewById(R.id.familyMembersList);
+
+        //Load up the ListAdapter and link it to Data.
+        final FamilyMemberAdapter adapter = new FamilyMemberAdapter(MainActivity.this, R.layout.row_family_member);
+        _familyMemberListView.setAdapter(adapter);
+        _familyMemberListView.setOnItemClickListener(this);
+
+
+
+        final Observer<ArrayList<FamilyMember>> familyMemberListObserver =
+                new Observer<ArrayList<FamilyMember>>() {
+                    @Override
+                    public void onChanged(@Nullable ArrayList<FamilyMember> familyMembers) {
+                        Log.i(TAG, "Main Activity family member list is now updated." + familyMembers.toString());
+                        adapter.setList(familyMembers);
+
+                    }
+                };
+        _mainView.getFamilyMembers().observe(this, familyMemberListObserver);
+
+        /* END ARCH */
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabEdit);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -53,28 +88,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        _familyMemberListView = (ListView) findViewById(R.id.familyMembersList);
-        _familyMembers = Mockstore.getList();
+
+
+
+
+
+
     }
 
-    /**
-     * onStart()
-     *
-     * Load the ListView on the OnStart lifecycle hook so that the
-     * Listview can be reloaded when a new FamilyMember is added.
-     */
-    @Override
-    protected void onStart() {
 
-        super.onStart();
-
-
-        //Load up the ListAdapter and link it to Data.
-        FamilyMemberAdapter adapter = new FamilyMemberAdapter(MainActivity.this, R.layout.row_family_member, _familyMembers);
-        _familyMemberListView.setAdapter(adapter);
-        _familyMemberListView.setOnItemClickListener(this);
+    private void onCreateSubscribe() {
+//        _mainView.getFamilyMembers().
 
     }
+
+
+
+
+
 
     /**
      *
@@ -123,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         Log.e("Testing", "You clicked Item: " + id + " at position:" + position);
 
-        FamilyMember familyMember = _familyMembers.get(position);
+        FamilyMember familyMember = _mainView.getFamilyMembers().getValue().get(position);
 
         Log.i(TAG, "Start of callback");
         Intent intent = new Intent(MainActivity.this , DetailFamilyMemberActivity.class);

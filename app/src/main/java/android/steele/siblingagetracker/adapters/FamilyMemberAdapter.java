@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -32,10 +33,27 @@ public class FamilyMemberAdapter extends ArrayAdapter<FamilyMember> {
         _inflater = new Inflater();
     }
 
+    public FamilyMemberAdapter(Context context, int resource) {
+        super(context, resource);
+        this._context = context;
+        this._familyMemberList = new ArrayList<FamilyMember>();
+        _inflater = new Inflater();
+    }
+
     @Override
     public int getCount () {
-        return _familyMemberList.size();
+        if (_familyMemberList != null) {
+            return _familyMemberList.size();
+        } else {
+            return 0;
+        }
     }
+
+    public void setList(ArrayList<FamilyMember> newList) {
+        _familyMemberList = newList;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public long getItemId (int position) {

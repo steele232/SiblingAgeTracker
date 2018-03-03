@@ -2,6 +2,7 @@ package android.steele.siblingagetracker.activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.arch.lifecycle.LifecycleOwner;
 import android.steele.siblingagetracker.R;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +24,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class DetailFamilyMemberActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class DetailFamilyMemberActivity extends AppCompatActivity
+        implements DatePickerDialog.OnDateSetListener, LifecycleOwner {
 
     private static final String TAG = DetailFamilyMemberActivity.class.getSimpleName();
 
@@ -165,18 +167,13 @@ public class DetailFamilyMemberActivity extends AppCompatActivity implements Dat
         _birthdate.set(Calendar.YEAR, year);
         _birthdate.set(Calendar.MONTH, month);
         _birthdate.set(Calendar.DAY_OF_MONTH, day);
-//        Date date = new Date(year, month, day);
-//        Log.i(TAG, localizedDateFormatter.format());
 
         textBirthdate.setText(localizedDateFormatter.format(_birthdate.getTime()));
 
     }
 
-    //TODO  How do I autofill the date when it's and EDIT mode? (Difficult Context?)
 
     public static String BIRTHDAY_BUNDLE_KEY = "MOVE";
-
-
 
     public static class DatePickerFragment extends DialogFragment{
 
@@ -220,13 +217,6 @@ public class DetailFamilyMemberActivity extends AppCompatActivity implements Dat
                     calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH)
             );
-//            DatePickerDialog dialog = new DatePickerDialog(
-//                    getActivity(),
-//                    onDateSetListener,
-//                    calendar.get(Calendar.YEAR),
-//                    calendar.get(Calendar.MONTH),
-//                    calendar.get(Calendar.DAY_OF_MONTH)
-//            );
             return dialog;
         }
 
