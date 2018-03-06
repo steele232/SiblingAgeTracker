@@ -4,6 +4,7 @@ import android.steele.siblingagetracker.R;
 import android.steele.siblingagetracker.interfaces.FMOnClickListener;
 import android.steele.siblingagetracker.model.FamilyMember;
 import android.steele.siblingagetracker.service.AgeCalculator;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,14 +75,17 @@ public class FamilyMemberRecyclerAdapter extends
     }
 
 
-    //TODO fill in the rest
-
     public FamilyMemberRecyclerAdapter(ArrayList<FamilyMember> newDataSet, FMOnClickListener listener) {
         _dataset = newDataSet;
         _listener = listener;
     }
 
+    //TODO use DiffUtil for Changes.
     public void setList(ArrayList<FamilyMember> newDataSet) {
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffCallback(_dataset, newDataSet));
+
+        result.dispatchUpdatesTo(this);
+
         _dataset = newDataSet;
     }
 
@@ -110,4 +114,46 @@ public class FamilyMemberRecyclerAdapter extends
         }
         return 0;
     }
+
+    public class DiffCallback extends DiffUtil.Callback {
+
+        private ArrayList<FamilyMember> _oldList;
+        private ArrayList<FamilyMember> _newList;
+
+
+        DiffCallback(
+                ArrayList<FamilyMember> oldList,
+                ArrayList<FamilyMember> newList
+        ) {
+            _oldList = oldList;
+            _newList = newList;
+
+        }
+
+        @Override
+        public int getOldListSize() {
+            return _oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return _newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            return true;
+            //want to compare apples to apples and apple2 to apple2. (types && id's)
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            return (
+                        _oldList.get(oldItemPosition).name.equals(_newList.get(newItemPosition).name) &&
+                        _oldList.get(oldItemPosition).birthdate.equals(_newList.get(newItemPosition).birthdate)
+                    );
+        }
+
+    }
+
 }
