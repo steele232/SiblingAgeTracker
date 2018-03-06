@@ -6,36 +6,38 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.steele.siblingagetracker.R;
-import android.steele.siblingagetracker.adapters.FamilyMemberAdapter;
+import android.steele.siblingagetracker.adapters.FamilyMemberRecyclerAdapter;
 import android.steele.siblingagetracker.model.FamilyMember;
-import android.steele.siblingagetracker.service.Mockstore;
 import android.steele.siblingagetracker.viewmodels.MainView;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.ListView;
+
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements AdapterView.OnItemClickListener, LifecycleOwner {
+        implements LifecycleOwner {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private ListView _familyMemberListView;
     private String username = "user2";
-//    private ArrayList<FamilyMember> _familyMembers;
 
     private MainView _mainView;
 
+    private RecyclerView _familyMemberRecyclerView;
+    private RecyclerView.Adapter _adapter;
+    private RecyclerView.LayoutManager _layoutManager;
 
 
 
@@ -48,17 +50,23 @@ public class MainActivity extends AppCompatActivity
         toolbar.setTitle(R.string.title_main);
 //        setSupportActionBar(toolbar);
 
-
-
         /* TODO ARCHITECTURE */
         _mainView = ViewModelProviders.of(this).get(MainView.class);
 
-        _familyMemberListView = (ListView) findViewById(R.id.familyMembersList);
+        /* Recycler View */
+        _familyMemberRecyclerView = (RecyclerView) findViewById(R.id.familyMembersList);
+        _familyMemberRecyclerView.setHasFixedSize(true);
+        _layoutManager = new LinearLayoutManager(this);
+        _familyMemberRecyclerView.setLayoutManager(_layoutManager);
+
+
+
 
         //Load up the ListAdapter and link it to Data.
-        final FamilyMemberAdapter adapter = new FamilyMemberAdapter(MainActivity.this, R.layout.row_family_member);
-        _familyMemberListView.setAdapter(adapter);
-        _familyMemberListView.setOnItemClickListener(this);
+
+        final FamilyMemberRecyclerAdapter adapter = new FamilyMemberRecyclerAdapter(new ArrayList<FamilyMember>());
+        _familyMemberRecyclerView.setAdapter(adapter);
+//        _familyMemberRecyclerView.setOnClickListener(this);
 
 
 
@@ -97,14 +105,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void onCreateSubscribe() {
-//        _mainView.getFamilyMembers().
-
-    }
-
-
-
-
 
 
     /**
@@ -119,12 +119,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /**
-     *
-     * @param item
-     * @return
-     */
-    @Override
+
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -143,14 +138,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Handle clicking on and editing an item/row
-     * @param parent
-     * @param view
-     * @param position
-     * @param id
-     */
-    @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         Log.e("Testing", "You clicked Item: " + id + " at position:" + position);
 

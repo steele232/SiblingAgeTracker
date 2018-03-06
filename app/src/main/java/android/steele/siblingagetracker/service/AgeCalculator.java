@@ -8,6 +8,14 @@ import java.util.Calendar;
 
 public class AgeCalculator {
 
+    /**
+     * TODO create instructions for how to do this:
+     * TODO Do I pass in a month as 0-11 or 1-12?
+     * @param birthYear
+     * @param birthMonth
+     * @param birthDay
+     * @return
+     */
     public static int calculateAge(int birthYear, int birthMonth, int birthDay ) {
 
         /**
@@ -20,8 +28,6 @@ public class AgeCalculator {
 
         //calculating the differences
         int yearDifference = currentYear - birthYear;
-        int monthDifference = currentMonth - birthMonth;
-        int dayDifference = currentDay - birthDay;
 
         //whether the last year should be counted...
         //if we've past the birthday of the year, we count the last year.
