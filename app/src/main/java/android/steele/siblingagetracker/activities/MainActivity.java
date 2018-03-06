@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.steele.siblingagetracker.R;
 import android.steele.siblingagetracker.adapters.FamilyMemberRecyclerAdapter;
+import android.steele.siblingagetracker.interfaces.FMOnClickListener;
 import android.steele.siblingagetracker.model.FamilyMember;
 import android.steele.siblingagetracker.viewmodels.MainView;
 import android.support.annotation.Nullable;
@@ -19,7 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 
 
 import com.google.gson.Gson;
@@ -27,7 +27,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements LifecycleOwner {
+        implements LifecycleOwner, FMOnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -62,11 +62,11 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        //Load up the ListAdapter and link it to Data.
+        //Load up the ListAdapter and link it to Data and listeners.
 
-        final FamilyMemberRecyclerAdapter adapter = new FamilyMemberRecyclerAdapter(new ArrayList<FamilyMember>());
+        final FamilyMemberRecyclerAdapter adapter =
+                new FamilyMemberRecyclerAdapter(new ArrayList<FamilyMember>(), this);
         _familyMemberRecyclerView.setAdapter(adapter);
-//        _familyMemberRecyclerView.setOnClickListener(this);
 
 
 
@@ -138,8 +138,9 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-        Log.e("Testing", "You clicked Item: " + id + " at position:" + position);
+
+    @Override
+    public void onItemClick(int position) {
 
         FamilyMember familyMember = _mainView.getFamilyMembers().getValue().get(position);
 
@@ -155,5 +156,4 @@ public class MainActivity extends AppCompatActivity
         Log.i(TAG, "End of callback");
 
     }
-
 }

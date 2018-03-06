@@ -20,7 +20,15 @@ public class Mockstore {
         fm.name = "Jonathan";
         fm.birthdate = calendar;
         familyMembers.add(fm);
+
+        fm = new FamilyMember();
+        fm.name = "Sara";
+        fm.birthdate = calendar;
         familyMembers.add(fm);
+
+        fm = new FamilyMember();
+        fm.name = "Jonny";
+        fm.birthdate = calendar;
         familyMembers.add(fm);
         familyMembers.add(fm);
 

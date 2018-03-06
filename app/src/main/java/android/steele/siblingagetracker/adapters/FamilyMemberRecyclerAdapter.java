@@ -1,6 +1,7 @@
 package android.steele.siblingagetracker.adapters;
 
 import android.steele.siblingagetracker.R;
+import android.steele.siblingagetracker.interfaces.FMOnClickListener;
 import android.steele.siblingagetracker.model.FamilyMember;
 import android.steele.siblingagetracker.service.AgeCalculator;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,8 @@ public class FamilyMemberRecyclerAdapter extends
 
     private static final DateFormat localizedDateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
 
+    private FMOnClickListener _listener;
+
     private ArrayList<FamilyMember> _dataset;
 
 
@@ -33,14 +36,25 @@ public class FamilyMemberRecyclerAdapter extends
         public TextView _nameView;
         public TextView _birthdateView;
         public TextView _ageView;
-        public FMViewHolder(View view) {
+        public FMOnClickListener _listener;
+        public int _position;
+        public FMViewHolder(View view, FMOnClickListener listener) {
             super(view);
             _nameView = (TextView) view.findViewById(R.id.name);
             _birthdateView = (TextView) view.findViewById(R.id.birthdate);
             _ageView = (TextView) view.findViewById(R.id.age);
+            _listener = listener;
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _listener.onItemClick(_position);
+                }
+            });
         }
 
-        public void bindFamilyMember(FamilyMember fm) {
+        public void bindFamilyMember(FamilyMember fm, int position) {
+            _position = position;
+
             _nameView.setText(fm.name);
 
             String birthdateString = localizedDateFormatter.format(fm.birthdate.getTime());
@@ -62,8 +76,9 @@ public class FamilyMemberRecyclerAdapter extends
 
     //TODO fill in the rest
 
-    public FamilyMemberRecyclerAdapter(ArrayList<FamilyMember> newDataSet) {
+    public FamilyMemberRecyclerAdapter(ArrayList<FamilyMember> newDataSet, FMOnClickListener listener) {
         _dataset = newDataSet;
+        _listener = listener;
     }
 
     public void setList(ArrayList<FamilyMember> newDataSet) {
@@ -78,14 +93,14 @@ public class FamilyMemberRecyclerAdapter extends
                 inflate(R.layout.row_family_member, parent, false);
 
         //create a Viewholder to hold it then return it
-        FMViewHolder viewHolder = new FMViewHolder(view);
+        FMViewHolder viewHolder = new FMViewHolder(view, _listener);
 
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(FMViewHolder holder, int position) {
-        holder.bindFamilyMember(_dataset.get(position));
+        holder.bindFamilyMember(_dataset.get(position), position);
     }
 
     @Override
