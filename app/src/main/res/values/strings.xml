@@ -12,6 +12,9 @@
 
     <string name="preferencesKey">app_preferences_key</string>
     <string name="app_data_key">app_data_kay</string>
+    <string name="default_age">55</string>
+    <string name="default_name">Name</string>
+    <string name="default_date_string">Jan 5, 1995</string>
 
 
 </resources>
