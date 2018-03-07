@@ -23,15 +23,12 @@ import java.util.Locale;
 public class FamilyMemberRecyclerAdapter extends
         RecyclerView.Adapter<FamilyMemberRecyclerAdapter.FMViewHolder> {
 
-
     private static final DateFormat localizedDateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
 
     private FMOnClickListener _listener;
 
     private ArrayList<FamilyMember> _dataset;
 
-
-    //TODO make ViewHolder
     public static class FMViewHolder extends RecyclerView.ViewHolder {
 
         public TextView _nameView;
@@ -80,7 +77,6 @@ public class FamilyMemberRecyclerAdapter extends
         _listener = listener;
     }
 
-    //TODO use DiffUtil for Changes.
     public void setList(ArrayList<FamilyMember> newDataSet) {
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffCallback(_dataset, newDataSet));
 

@@ -33,18 +33,17 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
 
     public static final int MAX_YEAR = 2200;
     public static final int MIN_YEAR = 1600;
-    private boolean inputIsValidated = false;
+    private boolean _inputIsValidated = false;
 
-    private boolean isInEdittingMode = false;
+    private boolean _isInEdittingMode = false;
 
-    private EditText editName;
-    private TextView textBirthdate;
+    private EditText _editName;
+    private TextView _textBirthdate;
 
     private String _username = "";
     private int _keyToEdit;
     private String _name = "";
     private GregorianCalendar _birthdate = new GregorianCalendar();
-    private Date thisDate;
 
 
     @Override
@@ -52,9 +51,9 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_family_member);
         if (getIntent().hasExtra("key")) {
-            isInEdittingMode = true;
+            _isInEdittingMode = true;
         }
-        if (isInEdittingMode) {
+        if (_isInEdittingMode) {
             setTitle(R.string.title_edit);
         } else {
             setTitle(R.string.title_add);
@@ -69,16 +68,16 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
 
         if (getIntent().hasExtra("key")) {
             _keyToEdit = getIntent().getIntExtra("key", 0);
-            Log.e(TAG, String.valueOf(_keyToEdit));
+            Log.i(TAG, String.valueOf(_keyToEdit));
         }
         if (getIntent().hasExtra("name")) {
             _name = getIntent().getStringExtra("name");
-            Log.e(TAG, _name);
+            Log.i(TAG, _name);
         }
         if (getIntent().hasExtra("birthdate")) {
             String birthdateString = getIntent().getStringExtra("birthdate");
             _birthdate = gson.fromJson(birthdateString, GregorianCalendar.class);
-            Log.e(TAG, _birthdate.toString());
+            Log.i(TAG, _birthdate.toString());
         }
 
         collectReferences();
@@ -89,19 +88,19 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
     }
 
     private void collectReferences() {
-        editName = (EditText) findViewById(R.id.editName);
-        textBirthdate = (TextView) findViewById(R.id.textBirthdayDisplay);
+        _editName = (EditText) findViewById(R.id.editName);
+        _textBirthdate = (TextView) findViewById(R.id.textBirthdayDisplay);
     }
 
     private void setFormData() {
-        editName.setText(_name);
-        textBirthdate.setText(localizedDateFormatter.format(_birthdate.getTime()));
+        _editName.setText(_name);
+        _textBirthdate.setText(localizedDateFormatter.format(_birthdate.getTime()));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        if (isInEdittingMode) {
+        if (_isInEdittingMode) {
             inflater.inflate(R.menu.menu_edit, menu);
         }
         return true;
@@ -135,7 +134,7 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         );
         newFragment = DatePickerFragment.newInstance(
                 new Date(
-                        _birthdate.getTimeInMillis() //TODO REMEMBER THIS!!! Don't use Deprecated Constructor w/ y/m/d
+                        _birthdate.getTimeInMillis() //REMEMBER THIS!!! Don't use Deprecated Constructor w/ y/m/d
                 ),
                 this
         );
@@ -168,7 +167,7 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         _birthdate.set(Calendar.MONTH, month);
         _birthdate.set(Calendar.DAY_OF_MONTH, day);
 
-        textBirthdate.setText(localizedDateFormatter.format(_birthdate.getTime()));
+        _textBirthdate.setText(localizedDateFormatter.format(_birthdate.getTime()));
 
     }
 

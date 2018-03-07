@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity
         toolbar.setTitle(R.string.title_main);
 //        setSupportActionBar(toolbar);
 
-        /* TODO ARCHITECTURE */
         _mainView = ViewModelProviders.of(this).get(MainView.class);
 
         /* Recycler View */
@@ -59,16 +58,11 @@ public class MainActivity extends AppCompatActivity
         _layoutManager = new LinearLayoutManager(this);
         _familyMemberRecyclerView.setLayoutManager(_layoutManager);
 
-
-
-
         //Load up the ListAdapter and link it to Data and listeners.
 
         final FamilyMemberRecyclerAdapter adapter =
                 new FamilyMemberRecyclerAdapter(new ArrayList<FamilyMember>(), this);
         _familyMemberRecyclerView.setAdapter(adapter);
-
-
 
         final Observer<ArrayList<FamilyMember>> familyMemberListObserver =
                 new Observer<ArrayList<FamilyMember>>() {
@@ -83,7 +77,6 @@ public class MainActivity extends AppCompatActivity
 
         /* END ARCH */
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabEdit);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,12 +88,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
-
-
-
-
-
 
     }
 
