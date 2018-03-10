@@ -19,17 +19,19 @@ public class Mockstore {
         GregorianCalendar calendar = new GregorianCalendar();
         FamilyMember fm = new FamilyMember();
         fm.name = "Jonathan";
+        calendar.set(Calendar.YEAR, 1990);
         fm.birthdate = calendar;
         familyMembers.add(fm);
 
         fm = new FamilyMember();
         fm.name = "Sara";
+        calendar = new GregorianCalendar();
         fm.birthdate = calendar;
         familyMembers.add(fm);
 
         fm = new FamilyMember();
         fm.name = "Jonny";
-        calendar.set(Calendar.YEAR, 1990);
+        calendar = new GregorianCalendar(1998, 03, 03);
         fm.birthdate = calendar;
         familyMembers.add(fm);
         familyMembers.add(fm);
