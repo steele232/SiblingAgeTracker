@@ -2,7 +2,11 @@ package android.steele.siblingagetracker.db;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.ColorLong;
 
 import java.util.GregorianCalendar;
 
@@ -12,13 +16,15 @@ import java.util.GregorianCalendar;
 @Entity
 public class FamilyMember {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "uid")
     private int uid;
 
     @ColumnInfo(name = "name")
     private String name;
 
     @ColumnInfo(name = "birthdate")
+    @TypeConverters({GregCalendarConverter.class})
     private GregorianCalendar birthdate;
 
     /*
@@ -54,6 +60,7 @@ public class FamilyMember {
 
     public FamilyMember() {}
 
+    @Ignore
     public FamilyMember(String name, GregorianCalendar birthdate) {
         this.name = name;
         this.birthdate = birthdate;
