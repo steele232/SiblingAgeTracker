@@ -6,6 +6,8 @@ import android.steele.siblingagetracker.model.FamilyMember;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.util.GregorianCalendar;
+
 /**
  * Created by jonathansteele on 2/27/18.
  */
@@ -15,16 +17,31 @@ public class DetailView extends ViewModel {
     private static final String TAG = DetailView.class.getSimpleName();
 
     @Nullable
-    private MutableLiveData<FamilyMember> _thisFamilyMember;
+    private MutableLiveData<FamilyMember> _thisFamilyMember = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> _isInEdittingMode = new MutableLiveData<>();
 
     public DetailView() {
         Log.i(TAG, "Default Constructor called");
+        _isInEdittingMode.postValue(false);
+        _thisFamilyMember.postValue(new FamilyMember(
+                "John",
+                new GregorianCalendar()
+        ));
     }
 
-    public DetailView(FamilyMember fm) {
+//    public DetailView(FamilyMember fm) {
+//        Log.i(TAG, "Non-Default Constructor called");
+//        _thisFamilyMember.postValue(fm);
+//        _isInEdittingMode.postValue(false);
+//    }
+
+    public DetailView(FamilyMember fm, boolean isEdittingNotAdding) {
         Log.i(TAG, "Non-Default Constructor called");
         _thisFamilyMember.postValue(fm);
+        _isInEdittingMode.postValue(isEdittingNotAdding);
     }
+
 
     @Nullable
     public MutableLiveData<FamilyMember> getFamilyMember() {
@@ -32,10 +49,19 @@ public class DetailView extends ViewModel {
         return _thisFamilyMember;
     }
 
-    public void setFamilyMembers(final FamilyMember newFamilyMember) {
-        Log.i(TAG, "SetFamily called");
-        _thisFamilyMember.postValue(newFamilyMember);
+    @Nullable
+    public MutableLiveData<Boolean> getIsEdittingMode() {
+        Log.i(TAG, "Get IsInEdittingMode called");
+        return _isInEdittingMode;
     }
+
+
+
+
+
+
+
+
 
 
 

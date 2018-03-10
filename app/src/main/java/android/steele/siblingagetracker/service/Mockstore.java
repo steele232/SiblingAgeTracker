@@ -3,6 +3,7 @@ package android.steele.siblingagetracker.service;
 import android.steele.siblingagetracker.model.FamilyMember;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
@@ -28,6 +29,7 @@ public class Mockstore {
 
         fm = new FamilyMember();
         fm.name = "Jonny";
+        calendar.set(Calendar.YEAR, 1990);
         fm.birthdate = calendar;
         familyMembers.add(fm);
         familyMembers.add(fm);
