@@ -1,6 +1,5 @@
 package android.steele.siblingagetracker.service;
 
-import android.steele.siblingagetracker.model.FamilyMember;
 import android.steele.siblingagetracker.model.User;
 import android.steele.siblingagetracker.model.UserPreferences;
 

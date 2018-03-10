@@ -30,12 +30,6 @@ public class DetailView extends ViewModel {
         ));
     }
 
-//    public DetailView(FamilyMember fm) {
-//        Log.i(TAG, "Non-Default Constructor called");
-//        _thisFamilyMember.postValue(fm);
-//        _isInEdittingMode.postValue(false);
-//    }
-
     public DetailView(FamilyMember fm, boolean isEdittingNotAdding) {
         Log.i(TAG, "Non-Default Constructor called");
         _thisFamilyMember.postValue(fm);
@@ -54,16 +48,5 @@ public class DetailView extends ViewModel {
         Log.i(TAG, "Get IsInEdittingMode called");
         return _isInEdittingMode;
     }
-
-
-
-
-
-
-
-
-
-
-
 
 }
