@@ -2,7 +2,7 @@ package android.steele.siblingagetracker.viewmodels;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.steele.siblingagetracker.model.FamilyMember;
+import android.steele.siblingagetracker.db.FamilyMember;
 import android.support.annotation.Nullable;
 import android.util.Log;
 

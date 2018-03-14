@@ -2,7 +2,7 @@ package android.steele.siblingagetracker.adapters;
 
 import android.steele.siblingagetracker.R;
 import android.steele.siblingagetracker.interfaces.FMOnClickListener;
-import android.steele.siblingagetracker.model.FamilyMember;
+import android.steele.siblingagetracker.db.FamilyMember;
 import android.steele.siblingagetracker.service.AgeCalculator;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -53,17 +53,17 @@ public class FamilyMemberRecyclerAdapter extends
         public void bindFamilyMember(FamilyMember fm, int position) {
             _position = position;
 
-            _nameView.setText(fm.name);
+            _nameView.setText(fm.getName());
 
-            String birthdateString = localizedDateFormatter.format(fm.birthdate.getTime());
+            String birthdateString = localizedDateFormatter.format(fm.getBirthdate().getTime());
             _birthdateView.setText(birthdateString);
 
 
             //TODO Make sure I'm using the Age Calculator right..
             int age = AgeCalculator.calculateAge(
-                    fm.birthdate.get(Calendar.YEAR),
-                    fm.birthdate.get(Calendar.MONTH),
-                    fm.birthdate.get(Calendar.DAY_OF_MONTH)
+                    fm.getBirthdate().get(Calendar.YEAR),
+                    fm.getBirthdate().get(Calendar.MONTH),
+                    fm.getBirthdate().get(Calendar.DAY_OF_MONTH)
             );
 
             _ageView.setText(Integer.toString(age));
@@ -145,8 +145,8 @@ public class FamilyMemberRecyclerAdapter extends
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
             return (
-                        _oldList.get(oldItemPosition).name.equals(_newList.get(newItemPosition).name) &&
-                        _oldList.get(oldItemPosition).birthdate.equals(_newList.get(newItemPosition).birthdate)
+                        _oldList.get(oldItemPosition).getName().equals(_newList.get(newItemPosition).getName()) &&
+                        _oldList.get(oldItemPosition).getBirthdate().equals(_newList.get(newItemPosition).getBirthdate())
                     );
         }
 

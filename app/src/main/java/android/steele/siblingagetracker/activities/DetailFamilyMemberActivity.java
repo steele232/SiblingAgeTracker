@@ -6,7 +6,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.steele.siblingagetracker.R;
-import android.steele.siblingagetracker.model.FamilyMember;
+import android.steele.siblingagetracker.db.FamilyMember;
 import android.steele.siblingagetracker.viewmodels.DetailView;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -59,7 +59,7 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
 
         //TODO Architecture stuff first.
         _detailView = ViewModelProviders.of(this).get(DetailView.class);
-        _detailView.getFamilyMember().setValue(
+        _detailView.getFamilyMember().postValue(
                 new FamilyMember(
                         "John", //TODO should never be shown.. Unless it's adding?
                         new GregorianCalendar()
@@ -93,7 +93,7 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
             // I guess from experience, I see that the field must be set.
             // I got a NullPointerException on this once or twice.
             FamilyMember fm = _detailView.getFamilyMember().getValue();
-            fm.birthdate = new GregorianCalendar();
+            fm.setBirthdate(new GregorianCalendar());
             _detailView.getFamilyMember().postValue(fm);
         }
 
@@ -113,18 +113,19 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
 
             String name = getIntent().getStringExtra("name");
             FamilyMember fm = _detailView.getFamilyMember().getValue();
-            fm.name = name;
+            fm.setName(name);
             _detailView.getFamilyMember().postValue(fm);
-            Log.i(TAG, "Name loaded from intent : " + _detailView.getFamilyMember().getValue().name);
+            Log.i(TAG, "Name loaded from intent : " + _detailView.getFamilyMember().getValue().getName());
         }
         if (getIntent().hasExtra("birthdate")) {
             String birthdateString = getIntent().getStringExtra("birthdate");
 
-            _detailView.getFamilyMember().getValue().birthdate =
-                    gson.fromJson(birthdateString, GregorianCalendar.class);
+            _detailView.getFamilyMember().getValue().setBirthdate(
+                    gson.fromJson(birthdateString, GregorianCalendar.class)
+            );
             Log.i(TAG, "Birthday loaded from intent : " +
                     localizedDateFormatter.format(
-                            _detailView.getFamilyMember().getValue().birthdate.getTime()
+                            _detailView.getFamilyMember().getValue().getBirthdate().getTime()
                     )
             );
         }
@@ -162,8 +163,8 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
     }
 
     private void setFormData(FamilyMember fm) {
-        _editName.setText(fm.name);
-        _textBirthdate.setText(localizedDateFormatter.format(fm.birthdate.getTime()));
+        _editName.setText(fm.getName());
+        _textBirthdate.setText(localizedDateFormatter.format(fm.getBirthdate().getTime()));
     }
 
 
@@ -209,12 +210,12 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         DatePickerFragment newFragment;
         Log.i(TAG, "Date I'm giving the Dialog: " +
                 localizedDateFormatter.format(
-                        _detailView.getFamilyMember().getValue().birthdate.getTime()
+                        _detailView.getFamilyMember().getValue().getBirthdate().getTime()
                 )
         );
         newFragment = DatePickerFragment.newInstance(
                 new Date(
-                        _detailView.getFamilyMember().getValue().birthdate
+                        _detailView.getFamilyMember().getValue().getBirthdate()
                                 .getTimeInMillis() //REMEMBER THIS!!! Don't use Deprecated Constructor w/ y/m/d
                 ),
                 this
@@ -229,15 +230,15 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         Log.i(TAG, "Year : " + year + " Month : " + month + " Day : " + day);
         //Remember that the month comes out in 0-11;
         //but so does Calendar, it's 1:1
-        _detailView.getFamilyMember().getValue().birthdate
+        _detailView.getFamilyMember().getValue().getBirthdate()
                 .set(Calendar.YEAR, year);
-        _detailView.getFamilyMember().getValue().birthdate
+        _detailView.getFamilyMember().getValue().getBirthdate()
                 .set(Calendar.MONTH, month);
-        _detailView.getFamilyMember().getValue().birthdate
+        _detailView.getFamilyMember().getValue().getBirthdate()
                 .set(Calendar.DAY_OF_MONTH, day);
 
         _textBirthdate.setText(localizedDateFormatter.format(
-                _detailView.getFamilyMember().getValue().birthdate
+                _detailView.getFamilyMember().getValue().getBirthdate()
                         .getTime())
         );
 

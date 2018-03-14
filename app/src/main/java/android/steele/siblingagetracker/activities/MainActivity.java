@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.steele.siblingagetracker.R;
 import android.steele.siblingagetracker.adapters.FamilyMemberRecyclerAdapter;
 import android.steele.siblingagetracker.interfaces.FMOnClickListener;
-import android.steele.siblingagetracker.model.FamilyMember;
+import android.steele.siblingagetracker.db.FamilyMember;
 import android.steele.siblingagetracker.viewmodels.MainView;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements LifecycleOwner, FMOnClickListener {
@@ -135,10 +136,10 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(MainActivity.this , DetailFamilyMemberActivity.class);
         intent.putExtra("username", username);
         intent.putExtra("key", position);
-        intent.putExtra("name", familyMember.name);
+        intent.putExtra("name", familyMember.getName());
         Gson gson = new Gson();
 
-        intent.putExtra("birthdate", gson.toJson(familyMember.birthdate));
+        intent.putExtra("birthdate", gson.toJson(familyMember.getBirthdate()));
         startActivity(intent);
         Log.i(TAG, "End of callback");
 
