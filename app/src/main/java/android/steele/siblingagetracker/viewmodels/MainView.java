@@ -10,7 +10,6 @@ import android.steele.siblingagetracker.db.utils.DatabaseInitializer;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,13 +34,7 @@ public class MainView extends AndroidViewModel {
 
         populateDb();
 
-
-        //TODO Have the ViewModel subscribe to changes in the DB?
-//        _familyMembers = new MutableLiveData<>();
-//        _familyMembers.postValue(_appDatabase.familyMemberDAO().getAll().getValue());
-
         _familyMembers = _appDatabase.familyMemberDAO().getAll();
-
 
     }
 

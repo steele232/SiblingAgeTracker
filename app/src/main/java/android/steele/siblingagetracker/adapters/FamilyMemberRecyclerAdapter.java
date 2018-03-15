@@ -6,13 +6,13 @@ import android.steele.siblingagetracker.db.FamilyMember;
 import android.steele.siblingagetracker.service.AgeCalculator;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -23,6 +23,8 @@ import java.util.Locale;
 
 public class FamilyMemberRecyclerAdapter extends
         RecyclerView.Adapter<FamilyMemberRecyclerAdapter.FMViewHolder> {
+
+    private String TAG = this.getClass().getSimpleName();
 
     private static final DateFormat localizedDateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
 
@@ -102,6 +104,8 @@ public class FamilyMemberRecyclerAdapter extends
     @Override
     public void onBindViewHolder(FMViewHolder holder, int position) {
         holder.bindFamilyMember(_dataset.get(position), position);
+
+        Log.i(TAG, "binding a value.. Does it have a ID? : " + _dataset.get(position).getUid());
     }
 
     @Override

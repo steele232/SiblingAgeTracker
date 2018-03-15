@@ -61,7 +61,7 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         _detailView = ViewModelProviders.of(this).get(DetailView.class);
         _detailView.getFamilyMember().setValue(
                 new FamilyMember(
-                        "", //TODO should never be shown.. Unless it's adding?
+                        "", // This is what's shown when it's adding?
                         new GregorianCalendar()
                 )
         );
@@ -87,11 +87,8 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
             setTitle(R.string.title_edit);
         } else {
             setTitle(R.string.title_add);
-            //TODO is this next line kosher? If not, what is the best way to do this?
 
             //TODO I think that I have to do postValue or else the value won't be pushed to subscribers.
-            // I guess from experience, I see that the field must be set.
-            // I got a NullPointerException on this once or twice.
             FamilyMember fm = _detailView.getFamilyMember().getValue();
             fm.setBirthdate(new GregorianCalendar());
             _detailView.getFamilyMember().postValue(fm);
@@ -99,10 +96,6 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
 
         Gson gson = new Gson();
 
-        //TODO do I need a Username?
-        //username gets sent whether it's edit or add because it's
-        //needed in both circumstances.
-//        _username = getIntent().getStringExtra("username");
 
         //TODO keep these lines for when we have an ID for each FM in the DB.
 //        if (getIntent().hasExtra("key")) {
@@ -308,6 +301,8 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         //Let's not save it.. Just finish() :D
 
         //TODO Make the Save happen #Architecture Stuff...
+        //TODO Create a AsyncTask in the MainView or elsewhere to insert a FM.
+        // Then everything should be updated on MainActivity because of single direction flow.
 //        _detailView.saveNewFamilyMember(
 //                this._detailView.getFamilyMember().getValue()
 //        );

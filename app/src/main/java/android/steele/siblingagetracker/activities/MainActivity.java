@@ -138,8 +138,7 @@ public class MainActivity extends AppCompatActivity
 
         Log.i(TAG, "Start of callback");
         Intent intent = new Intent(MainActivity.this , DetailFamilyMemberActivity.class);
-        intent.putExtra("username", username);
-        intent.putExtra("key", position);
+        intent.putExtra("key", familyMember.getUid());
         intent.putExtra("name", familyMember.getName());
         Gson gson = new Gson();
 
