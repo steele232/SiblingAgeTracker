@@ -308,6 +308,9 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         //Let's not save it.. Just finish() :D
 
         //TODO Make the Save happen #Architecture Stuff...
+//        _detailView.saveNewFamilyMember(
+//                this._detailView.getFamilyMember().getValue()
+//        );
 
         finish();
     }
