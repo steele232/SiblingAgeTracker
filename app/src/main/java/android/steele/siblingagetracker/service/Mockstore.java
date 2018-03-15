@@ -5,6 +5,7 @@ import android.steele.siblingagetracker.model.FamilyMember;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * Created by jonathansteele on 2/22/18.
@@ -14,7 +15,7 @@ public class Mockstore {
 
     Mockstore() {}
 
-    public static ArrayList<FamilyMember> getList() {
+    public static List<FamilyMember> getList() {
         ArrayList<FamilyMember> familyMembers = new ArrayList<>();
         GregorianCalendar calendar = new GregorianCalendar();
         FamilyMember fm = new FamilyMember();
