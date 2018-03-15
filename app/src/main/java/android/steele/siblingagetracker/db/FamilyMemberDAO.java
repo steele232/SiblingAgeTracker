@@ -31,6 +31,9 @@ public interface FamilyMemberDAO {
     @Delete
     void delete(FamilyMember... familyMembers);
 
+    @Query("DELETE FROM familymember")
+    void deleteAll();
+
     @Update
     void updateFamilyMembers(FamilyMember... familyMembers);
 
