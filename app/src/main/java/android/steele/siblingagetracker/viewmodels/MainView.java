@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jonathansteele on 2/27/18.
@@ -21,7 +22,7 @@ public class MainView extends AndroidViewModel {
     private AppDatabase _appDatabase;
 
     @Nullable
-    private MutableLiveData<ArrayList<FamilyMember>> _familyMembers = new MutableLiveData<>();
+    private MutableLiveData<List<FamilyMember>> _familyMembers = new MutableLiveData<>();
 
     public MainView(Application application) {
         super(application);
@@ -33,13 +34,13 @@ public class MainView extends AndroidViewModel {
 
         //TODO Have the ViewModel subscribe to changes in the DB?
         _familyMembers = new MutableLiveData<>();
-        _familyMembers.postValue(_appDatabase.familyMemberDAO().getAll());
+        _familyMembers.postValue(_appDatabase.familyMemberDAO().getAll().getValue());
 
 
     }
 
     @Nullable
-    public MutableLiveData<ArrayList<FamilyMember>> getFamilyMembers() {
+    public MutableLiveData<List<FamilyMember>> getFamilyMembers() {
         Log.i(TAG, "setFamilyMembers called");
         return _familyMembers;
     }

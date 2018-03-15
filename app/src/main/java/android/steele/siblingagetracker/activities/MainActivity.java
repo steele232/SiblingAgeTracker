@@ -65,11 +65,15 @@ public class MainActivity extends AppCompatActivity
                 new FamilyMemberRecyclerAdapter(new ArrayList<FamilyMember>(), this);
         _familyMemberRecyclerView.setAdapter(adapter);
 
-        final Observer<ArrayList<FamilyMember>> familyMemberListObserver =
-                new Observer<ArrayList<FamilyMember>>() {
+        final Observer<List<FamilyMember>> familyMemberListObserver =
+                new Observer<List<FamilyMember>>() {
                     @Override
-                    public void onChanged(@Nullable ArrayList<FamilyMember> familyMembers) {
-                        Log.i(TAG, "Main Activity family member list is now updated." + familyMembers.toString());
+                    public void onChanged(@Nullable List<FamilyMember> familyMembers) {
+                        if (familyMembers != null) {
+                            Log.i(TAG, "Main Activity family member list is now updated." + familyMembers.toString());
+                        } else {
+                            Log.i(TAG, "Main Activity family member list is now updated to null");
+                        }
                         adapter.setList(familyMembers);
 
                     }

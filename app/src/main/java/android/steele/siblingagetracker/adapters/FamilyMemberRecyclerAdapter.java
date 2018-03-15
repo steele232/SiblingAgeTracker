@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -27,7 +28,7 @@ public class FamilyMemberRecyclerAdapter extends
 
     private FMOnClickListener _listener;
 
-    private ArrayList<FamilyMember> _dataset;
+    private List<FamilyMember> _dataset;
 
     public static class FMViewHolder extends RecyclerView.ViewHolder {
 
@@ -72,12 +73,12 @@ public class FamilyMemberRecyclerAdapter extends
     }
 
 
-    public FamilyMemberRecyclerAdapter(ArrayList<FamilyMember> newDataSet, FMOnClickListener listener) {
+    public FamilyMemberRecyclerAdapter(List<FamilyMember> newDataSet, FMOnClickListener listener) {
         _dataset = newDataSet;
         _listener = listener;
     }
 
-    public void setList(ArrayList<FamilyMember> newDataSet) {
+    public void setList(List<FamilyMember> newDataSet) {
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffCallback(_dataset, newDataSet));
 
         result.dispatchUpdatesTo(this);
@@ -113,13 +114,13 @@ public class FamilyMemberRecyclerAdapter extends
 
     public class DiffCallback extends DiffUtil.Callback {
 
-        private ArrayList<FamilyMember> _oldList;
-        private ArrayList<FamilyMember> _newList;
+        private List<FamilyMember> _oldList;
+        private List<FamilyMember> _newList;
 
 
         DiffCallback(
-                ArrayList<FamilyMember> oldList,
-                ArrayList<FamilyMember> newList
+                List<FamilyMember> oldList,
+                List<FamilyMember> newList
         ) {
             _oldList = oldList;
             _newList = newList;
@@ -128,12 +129,18 @@ public class FamilyMemberRecyclerAdapter extends
 
         @Override
         public int getOldListSize() {
-            return _oldList.size();
+            if (_oldList != null) {
+                return _oldList.size();
+            }
+            return 0;
         }
 
         @Override
         public int getNewListSize() {
-            return _newList.size();
+            if (_newList != null) {
+                return _newList.size();
+            }
+            return 0;
         }
 
         @Override

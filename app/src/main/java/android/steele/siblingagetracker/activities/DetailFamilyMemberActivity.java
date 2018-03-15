@@ -59,9 +59,9 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
 
         //TODO Architecture stuff first.
         _detailView = ViewModelProviders.of(this).get(DetailView.class);
-        _detailView.getFamilyMember().postValue(
+        _detailView.getFamilyMember().setValue(
                 new FamilyMember(
-                        "John", //TODO should never be shown.. Unless it's adding?
+                        "", //TODO should never be shown.. Unless it's adding?
                         new GregorianCalendar()
                 )
         );

@@ -1,5 +1,7 @@
 package android.steele.siblingagetracker.db;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -17,10 +19,10 @@ import java.util.List;
 public interface FamilyMemberDAO {
 
     @Query("SELECT * FROM familymember")
-    List<FamilyMember> getAll();
+    LiveData<List<FamilyMember>> getAll();
 
     @Query("SELECT * FROM familymember WHERE uid IN (:familyIds)")
-    List<FamilyMember> loadAllByIds(int[] familyIds);
+    LiveData<List<FamilyMember>> loadAllByIds(int[] familyIds);
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
