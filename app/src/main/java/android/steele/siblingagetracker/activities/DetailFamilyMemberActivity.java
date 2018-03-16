@@ -46,83 +46,73 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
 
     private DetailView _detailView;
 
-// TODO Introduce a KEY to FamilyMember when we implement DB. Then use that for all editing.
-//    private int _keyToEdit;
+    private int _keyToEdit;
 
 
+    /**
+     * TODO Figure out how to manage intents and editting mode
+     * Does the intent last through recreation?
+     * At what point do I give the ViewModel the mode boolean?
+     * Should I have a local variable, then have a listener that
+     * updates the local variable from the ViewModel?
+     * And then should I have it get stuff from the intent only if the
+     * ViewModel's data is null? If so, I should probably keep those as null or something, right?
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_family_member);
-
         collectReferences();
 
-        //TODO Architecture stuff first.
         _detailView = ViewModelProviders.of(this).get(DetailView.class);
-        _detailView.getFamilyMember().setValue(
-                new FamilyMember(
-                        "", // This is what's shown when it's adding?
-                        new GregorianCalendar()
-                )
-        );
-        //TODO What is the difference between setValue and postValue on MutableLiveData<>?
 
 
+        //TODO keep these lines for when we have an ID for each FM in the DB.
+        //TODO Clear away other stuff so that the int key is all that is used.
+        //TODO Make a DAO function to get a FamilyMember searching by ID.
+
+        // TODO get the intent and ...
+        if (getIntent().hasExtra("key")) {
+            _keyToEdit = getIntent().getIntExtra("key", 0);
+        // TODO kick it off with 'start Editing #...
+            _detailView.startEditingFamilyMemberWithID(_keyToEdit);
+            Log.i(TAG, String.valueOf(_keyToEdit));
+        } else {
+            _detailView.startAddingFamilyMember();
+        }
+
+
+        // TODO the subscribe to the rest.
         subscribeFamilyMember();
         subscribeIsEdittingMode();
 
-        //TODO Figure out how to manage intents and editting mode
-        // Does the intent last through recreation?
-        // At what point do I give the ViewModel the mode boolean?
-        // Should I have a local variable, then have a listener that
-        // updates the local variable from the ViewModel?
-        // And then should I have it get stuff from the intent only if the
-        // ViewModel's data is null? If so, I should probably keep those as null or something, right?
-        if (getIntent().hasExtra("key")) {
-//            _isInEdittingMode = true;
-            _detailView.getIsEdittingMode().postValue(true);
+        //because we've already subscribed, _isInEdittingMode will be up to date from now on.
+        // but I'm not going to take that chance
 
-        }
-        if (_isInEdittingMode) {
+
+        if (getIntent().hasExtra("key")) {
             setTitle(R.string.title_edit);
         } else {
             setTitle(R.string.title_add);
 
-            //TODO I think that I have to do postValue or else the value won't be pushed to subscribers.
-            FamilyMember fm = _detailView.getFamilyMember().getValue();
-            fm.setBirthdate(new GregorianCalendar());
-            _detailView.getFamilyMember().postValue(fm);
+            //Set up a blank FM
+            //TODO Set up blank FM in ViewModel
+
+            //I think that I have to do postValue or else the value won't be pushed to subscribers.
         }
 
-        Gson gson = new Gson();
+    }
 
+    private void collectReferences() {
+        _editName = (EditText) findViewById(R.id.editName);
+        _textBirthdate = (TextView) findViewById(R.id.textBirthdayDisplay);
+    }
 
-        //TODO keep these lines for when we have an ID for each FM in the DB.
-//        if (getIntent().hasExtra("key")) {
-//            _keyToEdit = getIntent().getIntExtra("key", 0);
-//            Log.i(TAG, String.valueOf(_keyToEdit));
-//        }
-        if (getIntent().hasExtra("name")) {
-
-            String name = getIntent().getStringExtra("name");
-            FamilyMember fm = _detailView.getFamilyMember().getValue();
-            fm.setName(name);
-            _detailView.getFamilyMember().postValue(fm);
-            Log.i(TAG, "Name loaded from intent : " + _detailView.getFamilyMember().getValue().getName());
-        }
-        if (getIntent().hasExtra("birthdate")) {
-            String birthdateString = getIntent().getStringExtra("birthdate");
-
-            _detailView.getFamilyMember().getValue().setBirthdate(
-                    gson.fromJson(birthdateString, GregorianCalendar.class)
-            );
-            Log.i(TAG, "Birthday loaded from intent : " +
-                    localizedDateFormatter.format(
-                            _detailView.getFamilyMember().getValue().getBirthdate().getTime()
-                    )
-            );
-        }
-
+    private void setFormData(FamilyMember fm) {
+        _editName.setText(fm.getName());
+        _textBirthdate.setText(localizedDateFormatter.format(fm.getBirthdate().getTime()));
     }
 
     private void subscribeFamilyMember() {
@@ -144,21 +134,13 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable Boolean isInEdittingMode) {
                 _isInEdittingMode = isInEdittingMode;
+                _detailView.startEditingFamilyMemberWithID(_keyToEdit);
             }
         };
         _detailView.getIsEdittingMode().observe(this, isEdittingModeObserver);
 
     }
 
-    private void collectReferences() {
-        _editName = (EditText) findViewById(R.id.editName);
-        _textBirthdate = (TextView) findViewById(R.id.textBirthdayDisplay);
-    }
-
-    private void setFormData(FamilyMember fm) {
-        _editName.setText(fm.getName());
-        _textBirthdate.setText(localizedDateFormatter.format(fm.getBirthdate().getTime()));
-    }
 
 
     /*
@@ -301,11 +283,9 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         //Let's not save it.. Just finish() :D
 
         //TODO Make the Save happen #Architecture Stuff...
+        //TODO Make the UPDATE happen as well #Architecture Stuff...
         //TODO Create a AsyncTask in the MainView or elsewhere to insert a FM.
-        // Then everything should be updated on MainActivity because of single direction flow.
-//        _detailView.saveNewFamilyMember(
-//                this._detailView.getFamilyMember().getValue()
-//        );
+
 
         finish();
     }

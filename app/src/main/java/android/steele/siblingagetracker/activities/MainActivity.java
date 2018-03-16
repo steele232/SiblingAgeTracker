@@ -136,15 +136,11 @@ public class MainActivity extends AppCompatActivity
 
         FamilyMember familyMember = _mainView.getFamilyMembers().getValue().get(position);
 
-        Log.i(TAG, "Start of callback");
+        Log.i(TAG, "Start of MainActivity FAB onClick");
         Intent intent = new Intent(MainActivity.this , DetailFamilyMemberActivity.class);
         intent.putExtra("key", familyMember.getUid());
-        intent.putExtra("name", familyMember.getName());
-        Gson gson = new Gson();
-
-        intent.putExtra("birthdate", gson.toJson(familyMember.getBirthdate()));
         startActivity(intent);
-        Log.i(TAG, "End of callback");
+        Log.i(TAG, "End of MainActivity FAB onClick");
 
     }
 }

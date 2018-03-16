@@ -22,7 +22,10 @@ public interface FamilyMemberDAO {
     LiveData<List<FamilyMember>> getAll();
 
     @Query("SELECT * FROM familymember WHERE uid IN (:familyIds)")
-    LiveData<List<FamilyMember>> loadAllByIds(int[] familyIds);
+    LiveData<FamilyMember> getFamilyMemberByID(int familyIds);
+
+    @Query("SELECT * FROM familymember WHERE uid IN (:familyIds)")
+    LiveData<List<FamilyMember>> getFamilyMembersByID(int[] familyIds);
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
