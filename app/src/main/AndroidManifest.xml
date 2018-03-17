@@ -19,16 +19,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.SettingsActivity"
-            android:parentActivityName=".activities.MainActivity"/>
-
 
         <activity android:name=".activities.DetailFamilyMemberActivity"
-            android:parentActivityName="android.steele.siblingagetracker.activities.MainActivity"
             android:launchMode="singleTop">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="android.steele.siblingagetracker.activities.MainActivity"/>
         </activity>
 
 
