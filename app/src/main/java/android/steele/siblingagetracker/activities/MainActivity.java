@@ -83,9 +83,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
+                Log.i(TAG, "Start of FAB OnClick Event");
                 Intent intent = new Intent(MainActivity.this, DetailFamilyMemberActivity.class);
-                intent.putExtra("username", username);
                 startActivity(intent);
+                Log.i(TAG, "End of FAB OnClick Event");
 
             }
         });
@@ -132,11 +133,11 @@ public class MainActivity extends AppCompatActivity
 
         FamilyMember familyMember = _mainView.getFamilyMembers().getValue().get(position);
 
-        Log.i(TAG, "Start of MainActivity FAB onClick");
+        Log.i(TAG, "Start of MainActivity ListItem onClick");
         Intent intent = new Intent(MainActivity.this , DetailFamilyMemberActivity.class);
         intent.putExtra("key", familyMember.getUid());
         startActivity(intent);
-        Log.i(TAG, "End of MainActivity FAB onClick");
+        Log.i(TAG, "End of MainActivity ListItem onClick");
 
     }
 }

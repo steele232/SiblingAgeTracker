@@ -70,11 +70,11 @@ public class DetailView extends AndroidViewModel {
 
     public void startAddingFamilyMember() {
         Log.i(TAG, "I'm starting to add a family member");
+
         //set up a fresh blank Family Member.
         FamilyMember fm = new FamilyMember();
         fm.setName("");
         fm.setBirthdate(new GregorianCalendar());
-//        ((MutableLiveData<FamilyMember>)_thisFamilyMember).setValue(fm);
 
         _thisFamilyMember = new MutableLiveData<>();
         ((MutableLiveData<FamilyMember>) _thisFamilyMember).postValue(fm);

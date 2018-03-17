@@ -268,12 +268,18 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
 
         if (!_isInEdittingMode) {
             //TODO Make the Add/Save happen #Architecture Stuff...
+            FamilyMember newFamilyMember = _detailView.getFamilyMember().getValue();
+            if (newFamilyMember != null) {
+                String newName = ((TextView) findViewById(R.id.editName)).getText().toString();
+                Log.i(TAG, "Name collected is : " + newName);
+                _detailView.getFamilyMember().getValue().setName(newName);
+                newFamilyMember.setName(newName);
+            }
             _detailView.saveNewFamilyMember(); //it has the new family member of itself.
+        } else {
+            //Edit and update!
+            //TODO Make the UPDATE happen as well #Architecture Stuff...
         }
-
-        //TODO Make the UPDATE happen as well #Architecture Stuff...
-        //TODO Create a AsyncTask in the MainView or elsewhere to insert a FM.
-
 
         finish();
     }
