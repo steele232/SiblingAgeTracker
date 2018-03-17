@@ -104,8 +104,11 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         final Observer<FamilyMember> familyMemberObserver = new Observer<FamilyMember>() {
             @Override
             public void onChanged(@Nullable FamilyMember familyMember) {
-                Log.i(TAG, "Family Member should be updated.");
-                setFormData(familyMember);
+                if (familyMember != null) {
+                    Log.i(TAG, "Family Member should be updated.");
+                    setFormData(familyMember);
+                }
+                Log.i(TAG, "Family Member was null after observer was notified.");
             }
         };
         _detailView.getFamilyMember().observe(this, familyMemberObserver);
@@ -133,10 +136,13 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.i(TAG, "onCreateOptions Menu Called");
         MenuInflater inflater = getMenuInflater();
-        if (_isInEdittingMode) {
+        if (getIntent().hasExtra("key")) {
+            Log.i(TAG, "Made it inside the If statement");
             inflater.inflate(R.menu.menu_edit, menu);
         }
+        Log.i(TAG, "onCreateOptions Menu nearly finished");
         return true;
     }
 
@@ -148,9 +154,8 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         if (item.getItemId() == R.id.action_delete) {
             Log.i(TAG, "Got to the delete click event");
 
+            _detailView.deleteFamilyMember(); //_detailView has the FM to delete.
 
-            //TODO DELETE THE THING #Architecture Stuff...
-            //
             finish();
 
         } else {
