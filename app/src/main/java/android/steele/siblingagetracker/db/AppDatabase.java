@@ -13,8 +13,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract FamilyMemberDAO familyMemberDAO();
 
-    //TODO Set this up as a singleton
-
     private static AppDatabase _INSTANCE;
 
     public static AppDatabase getDatabase(Context context) {
