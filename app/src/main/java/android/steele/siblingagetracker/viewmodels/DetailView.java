@@ -49,25 +49,26 @@ public class DetailView extends AndroidViewModel {
     }
 
     public void saveNewFamilyMember(FamilyMember newFamilyMember) {
-        _appDatabase.familyMemberDAO().insertAll(newFamilyMember);
+        //TODO do an AsyncTask for inserting the newFamilyMember
+//        _appDatabase.familyMemberDAO().insertAll(newFamilyMember);
     }
 
     public void startEditingFamilyMemberWithID(int keyToEdit) {
-        // TODO Get Family Member by Id... Make sure it works.
-        // set the FM.
+        // Get Family Member by Id
+        // set the FM & Editing Mode
+
         _thisFamilyMember = _appDatabase.familyMemberDAO().getFamilyMemberByID(keyToEdit);
 
-        //DON'T set editting mode because it's already been set in the callback that its the only usage of this function.
-        // TODO Actually do set the editting value.. Change in architecture.
         _isInEdittingMode.postValue(true);
     }
 
     public void startAddingFamilyMember() {
-        //TODO
+        //set up a fresh blank Family Member.
         FamilyMember fm = new FamilyMember();
         fm.setName("");
         fm.setBirthdate(new GregorianCalendar());
         ((MutableLiveData<FamilyMember>)_thisFamilyMember).postValue(fm);
+
         _isInEdittingMode.postValue(false);
     }
 }

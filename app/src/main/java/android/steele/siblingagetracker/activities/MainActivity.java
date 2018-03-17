@@ -21,11 +21,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity
         implements LifecycleOwner, FMOnClickListener {
@@ -37,7 +35,6 @@ public class MainActivity extends AppCompatActivity
     private MainView _mainView;
 
     private RecyclerView _familyMemberRecyclerView;
-    private RecyclerView.Adapter _adapter;
     private RecyclerView.LayoutManager _layoutManager;
 
 
@@ -60,7 +57,6 @@ public class MainActivity extends AppCompatActivity
         _familyMemberRecyclerView.setLayoutManager(_layoutManager);
 
         //Load up the ListAdapter and link it to Data and listeners.
-
         final FamilyMemberRecyclerAdapter adapter =
                 new FamilyMemberRecyclerAdapter(new ArrayList<FamilyMember>(), this);
         _familyMemberRecyclerView.setAdapter(adapter);

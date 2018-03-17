@@ -69,39 +69,27 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         _detailView = ViewModelProviders.of(this).get(DetailView.class);
 
 
-        //TODO keep these lines for when we have an ID for each FM in the DB.
-        //TODO Clear away other stuff so that the int key is all that is used.
-        //TODO Make a DAO function to get a FamilyMember searching by ID.
+        //Keep these lines for when we have an ID for each FM in the DB.
+        //Clear away other stuff so that the int key is all that is used.
+        //Make a DAO function to get a FamilyMember searching by ID.
 
-        // TODO get the intent and ...
+        // Get the intent and ...
         if (getIntent().hasExtra("key")) {
+            setTitle(R.string.title_edit);
             _keyToEdit = getIntent().getIntExtra("key", 0);
-        // TODO kick it off with 'start Editing #...
+        // Kick it off with 'start Editing #...'
             _detailView.startEditingFamilyMemberWithID(_keyToEdit);
             Log.i(TAG, String.valueOf(_keyToEdit));
         } else {
+            setTitle(R.string.title_add);
+        // OR Kick it off with a fresh FM
             _detailView.startAddingFamilyMember();
         }
 
 
-        // TODO the subscribe to the rest.
+        // Then subscribe to the rest.
         subscribeFamilyMember();
         subscribeIsEdittingMode();
-
-        //because we've already subscribed, _isInEdittingMode will be up to date from now on.
-        // but I'm not going to take that chance
-
-
-        if (getIntent().hasExtra("key")) {
-            setTitle(R.string.title_edit);
-        } else {
-            setTitle(R.string.title_add);
-
-            //Set up a blank FM
-            //TODO Set up blank FM in ViewModel
-
-            //I think that I have to do postValue or else the value won't be pushed to subscribers.
-        }
 
     }
 
