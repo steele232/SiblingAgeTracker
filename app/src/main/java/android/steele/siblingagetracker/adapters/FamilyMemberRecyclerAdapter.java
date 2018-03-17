@@ -61,8 +61,6 @@ public class FamilyMemberRecyclerAdapter extends
             String birthdateString = localizedDateFormatter.format(fm.getBirthdate().getTime());
             _birthdateView.setText(birthdateString);
 
-
-            //TODO Make sure I'm using the Age Calculator right..
             int age = AgeCalculator.calculateAge(
                     fm.getBirthdate().get(Calendar.YEAR),
                     fm.getBirthdate().get(Calendar.MONTH),

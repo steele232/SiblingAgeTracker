@@ -264,10 +264,10 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
     public void onFormSubmit(View v) {
 
         //What about empty name field?
-        //Let's not save it.. Just finish() :D
+        //Let's just save it anyway. They can edit it in a second.
 
         if (!_isInEdittingMode) {
-            //TODO Make the Add/Save happen #Architecture Stuff...
+            // Insert it into the DB.
             FamilyMember newFamilyMember = _detailView.getFamilyMember().getValue();
             if (newFamilyMember != null) {
                 String newName = ((TextView) findViewById(R.id.editName)).getText().toString();
@@ -276,10 +276,9 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
                 newFamilyMember.setName(newName);
             }
             _detailView.saveNewFamilyMember(); //it has the new family member of itself.
-        } else {
-            //Edit and update!
-            //TODO Make the UPDATE happen as well #Architecture Stuff...
         }
+
+        // The Update is actually covered by the LiveData. WOOT WOOT!!
 
         finish();
     }

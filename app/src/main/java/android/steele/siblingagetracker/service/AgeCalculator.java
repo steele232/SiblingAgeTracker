@@ -9,8 +9,12 @@ import java.util.Calendar;
 public class AgeCalculator {
 
     /**
-     * TODO create instructions for how to do this:
-     * TODO Do I pass in a month as 0-11 or 1-12?
+     * You can pass in the month as 0-11 because that's
+     * how Calendars and Dates return the fields.
+     *
+     * You can pass in the year, month, and day of the month
+     * exactly how they get returned from a Calendar or Date.
+     *
      * @param birthYear
      * @param birthMonth
      * @param birthDay

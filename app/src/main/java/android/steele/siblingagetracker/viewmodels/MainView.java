@@ -32,14 +32,14 @@ public class MainView extends AndroidViewModel {
 
         _appDatabase = AppDatabase.getDatabase(this.getApplication());
 
-        populateDb();
+//        populateDb();
 
         _familyMembers = _appDatabase.familyMemberDAO().getAll();
 
     }
 
     private void populateDb() {
-        DatabaseInitializer.populateAsync(_appDatabase);
+//        DatabaseInitializer.populateAsync(_appDatabase);
     }
 
     @Nullable

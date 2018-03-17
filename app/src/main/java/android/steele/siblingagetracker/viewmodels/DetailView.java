@@ -50,7 +50,6 @@ public class DetailView extends AndroidViewModel {
     }
 
     public void saveNewFamilyMember() {
-        //TODO Do an AsyncTask for inserting the newFamilyMember ... QUALITY CHECK.
         InsertFamilyMemberTask task = new InsertFamilyMemberTask(
                 _appDatabase,
                 _thisFamilyMember.getValue()
