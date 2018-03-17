@@ -49,17 +49,6 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
     private int _keyToEdit;
 
 
-    /**
-     * TODO Figure out how to manage intents and editting mode
-     * Does the intent last through recreation?
-     * At what point do I give the ViewModel the mode boolean?
-     * Should I have a local variable, then have a listener that
-     * updates the local variable from the ViewModel?
-     * And then should I have it get stuff from the intent only if the
-     * ViewModel's data is null? If so, I should probably keep those as null or something, right?
-     *
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,15 +64,26 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
 
         // Get the intent and ...
         if (getIntent().hasExtra("key")) {
+
             setTitle(R.string.title_edit);
+
+            //collect the int UID.
             _keyToEdit = getIntent().getIntExtra("key", 0);
-        // Kick it off with 'start Editing #...'
+
+            // Kick it off with 'start Editing #...'
             _detailView.startEditingFamilyMemberWithID(_keyToEdit);
-            Log.i(TAG, String.valueOf(_keyToEdit));
+
+            Log.i(TAG, "Starting to edit FM with ID : " + String.valueOf(_keyToEdit));
+
         } else {
+
             setTitle(R.string.title_add);
-        // OR Kick it off with a fresh FM
+
+            // OR Kick it off with a fresh FM
             _detailView.startAddingFamilyMember();
+
+            Log.i(TAG, "Starting to add a FM from Blank");
+
         }
 
 
