@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.steele.siblingagetracker.db.AppDatabase;
 import android.steele.siblingagetracker.db.FamilyMember;
+import android.steele.siblingagetracker.db.asynctasks.InsertFamilyMemberTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -48,26 +49,35 @@ public class DetailView extends AndroidViewModel {
         return _isInEdittingMode;
     }
 
-    public void saveNewFamilyMember(FamilyMember newFamilyMember) {
-        //TODO do an AsyncTask for inserting the newFamilyMember
-//        _appDatabase.familyMemberDAO().insertAll(newFamilyMember);
+    public void saveNewFamilyMember() {
+        //TODO Do an AsyncTask for inserting the newFamilyMember ... QUALITY CHECK.
+        InsertFamilyMemberTask task = new InsertFamilyMemberTask(
+                _appDatabase,
+                _thisFamilyMember.getValue()
+        );
+        task.execute();
     }
 
     public void startEditingFamilyMemberWithID(int keyToEdit) {
+        Log.i(TAG, "I'm starting to edit a family member");
         // Get Family Member by Id
         // set the FM & Editing Mode
 
         _thisFamilyMember = _appDatabase.familyMemberDAO().getFamilyMemberByID(keyToEdit);
 
-        _isInEdittingMode.postValue(true);
+        _isInEdittingMode.setValue(true);
     }
 
     public void startAddingFamilyMember() {
+        Log.i(TAG, "I'm starting to add a family member");
         //set up a fresh blank Family Member.
         FamilyMember fm = new FamilyMember();
         fm.setName("");
         fm.setBirthdate(new GregorianCalendar());
-        ((MutableLiveData<FamilyMember>)_thisFamilyMember).postValue(fm);
+//        ((MutableLiveData<FamilyMember>)_thisFamilyMember).setValue(fm);
+
+        _thisFamilyMember = new MutableLiveData<>();
+        ((MutableLiveData<FamilyMember>) _thisFamilyMember).postValue(fm);
 
         _isInEdittingMode.postValue(false);
     }

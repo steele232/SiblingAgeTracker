@@ -58,10 +58,6 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         _detailView = ViewModelProviders.of(this).get(DetailView.class);
 
 
-        //Keep these lines for when we have an ID for each FM in the DB.
-        //Clear away other stuff so that the int key is all that is used.
-        //Make a DAO function to get a FamilyMember searching by ID.
-
         // Get the intent and ...
         if (getIntent().hasExtra("key")) {
 
@@ -121,8 +117,8 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         final Observer<Boolean> isEdittingModeObserver = new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable Boolean isInEdittingMode) {
+                Log.i(TAG, "Editting Mode observer is updating the activity's local boolean.");
                 _isInEdittingMode = isInEdittingMode;
-                _detailView.startEditingFamilyMemberWithID(_keyToEdit);
             }
         };
         _detailView.getIsEdittingMode().observe(this, isEdittingModeObserver);
@@ -270,7 +266,11 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
         //What about empty name field?
         //Let's not save it.. Just finish() :D
 
-        //TODO Make the Save happen #Architecture Stuff...
+        if (!_isInEdittingMode) {
+            //TODO Make the Add/Save happen #Architecture Stuff...
+            _detailView.saveNewFamilyMember(); //it has the new family member of itself.
+        }
+
         //TODO Make the UPDATE happen as well #Architecture Stuff...
         //TODO Create a AsyncTask in the MainView or elsewhere to insert a FM.
 
