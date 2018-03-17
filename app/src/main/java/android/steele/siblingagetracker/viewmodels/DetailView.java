@@ -35,16 +35,6 @@ public class DetailView extends AndroidViewModel {
         _isInEdittingMode.postValue(false);
     }
 
-//    public DetailView(Application application, FamilyMember fm, boolean isEdittingNotAdding) {
-//        super(application);
-//
-//        _appDatabase = AppDatabase.getDatabase(this.getApplication());
-//
-//        Log.i(TAG, "Non-Default Constructor called");
-////        _thisFamilyMember.postValue(fm);
-//        _isInEdittingMode.postValue(isEdittingNotAdding);
-//    }
-
 
     @Nullable
     public LiveData<FamilyMember> getFamilyMember() {

@@ -41,7 +41,6 @@ public class DatabaseInitializer {
             return null;
         }
 
-
     }
 
     private static void populateWithTestData(AppDatabase db) {
