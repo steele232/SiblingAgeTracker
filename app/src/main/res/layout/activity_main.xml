@@ -43,7 +43,7 @@
         tools:layout_editor_absoluteY="278dp">
 
         <ImageView
-            android:id="@+id/arrowHelper"
+            android:id="@+id/helperArrow"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginBottom="24dp"

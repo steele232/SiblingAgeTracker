@@ -20,6 +20,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +41,8 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView _familyMemberRecyclerView;
     private RecyclerView.LayoutManager _layoutManager;
 
+    private TextView _helperInstructions;
+    private ImageView _helperArrow;
 
 
 
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_main);
 //        setSupportActionBar(toolbar);
+        collectHelperViewReferences();
 
         _mainView = ViewModelProviders.of(this).get(MainView.class);
 
@@ -65,13 +72,23 @@ public class MainActivity extends AppCompatActivity
                 new Observer<List<FamilyMember>>() {
                     @Override
                     public void onChanged(@Nullable List<FamilyMember> familyMembers) {
+                        Gson gson = new Gson();
                         if (familyMembers != null) {
-                            Log.i(TAG, "Main Activity family member list is now updated." + familyMembers.toString());
+                            //I don't know that this would ever be null....
+
+                            // the test is whether the list is empty or not..
+                            if (familyMembers.isEmpty()) {
+                                Log.i(TAG, "Main Activity family member list is now updated." + gson.toJson(familyMembers) );
+                                showHelpers();
+                            } else {
+                                Log.i(TAG, "Main Activity family member list is now updated." + gson.toJson(familyMembers) );
+                                hideHelpers();
+                            }
+
                         } else {
-                            Log.i(TAG, "Main Activity family member list is now updated to null");
+                            Log.e(TAG, "Main Activity family member list is now being updated to null. That's a problem.");
                         }
                         adapter.setList(familyMembers);
-
                     }
                 };
         _mainView.getFamilyMembers().observe(this, familyMemberListObserver);
@@ -92,6 +109,26 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
+
+    public void collectHelperViewReferences() {
+        _helperArrow = findViewById(R.id.helperArrow);
+        _helperInstructions = findViewById(R.id.helperInstructions);
+    }
+
+    public boolean helpersAreHidden() {
+        return !_helperArrow.isShown() || !_helperInstructions.isShown();
+    }
+
+    public void hideHelpers() {
+        _helperArrow.setVisibility(View.INVISIBLE);
+        _helperInstructions.setVisibility(View.INVISIBLE);
+    }
+
+    public void showHelpers() {
+        _helperArrow.setVisibility(View.VISIBLE);
+        _helperInstructions.setVisibility(View.VISIBLE);
+    }
+
 
 
 
