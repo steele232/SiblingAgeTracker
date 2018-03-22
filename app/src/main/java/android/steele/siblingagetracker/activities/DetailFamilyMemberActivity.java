@@ -278,6 +278,7 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
                 String newName = ((TextView) findViewById(R.id.editName)).getText().toString();
                 Log.i(TAG, "Name collected is : " + newName);
                 _detailView.getFamilyMember().getValue().setName(newName);
+                _detailView.getFamilyMember().getValue().setUid(0);
                 newFamilyMember.setName(newName);
             }
             _detailView.saveNewFamilyMember(); //it has the new family member of itself.

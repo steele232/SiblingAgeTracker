@@ -81,9 +81,9 @@ public class FamilyMemberRecyclerAdapter extends
     public void setList(List<FamilyMember> newDataSet) {
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffCallback(_dataset, newDataSet));
 
-        result.dispatchUpdatesTo(this);
-
         _dataset = newDataSet;
+
+        result.dispatchUpdatesTo(this);
     }
 
     @Override
@@ -147,7 +147,9 @@ public class FamilyMemberRecyclerAdapter extends
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            return true;
+
+            return _oldList.get(oldItemPosition).getUid() ==
+                    _newList.get(newItemPosition).getUid();
             //want to compare apples to apples and apple2 to apple2. (types && id's)
         }
 
