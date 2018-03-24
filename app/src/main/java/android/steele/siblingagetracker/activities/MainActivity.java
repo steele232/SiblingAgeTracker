@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_main);
-//        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
         collectHelperViewReferences();
 
         _mainView = ViewModelProviders.of(this).get(MainView.class);
@@ -147,17 +147,24 @@ public class MainActivity extends AppCompatActivity
 
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here.
         int id = item.getItemId();
 
-        Log.d(TAG, "Settings selected!");
-        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-        startActivity(intent);
+        switch (id) {
+            case R.id.action_sort_by_seniority:
+                Log.i(TAG,"Sorting by Seniority now!");
+                break;
+            case R.id.action_sort_by_name:
+                Log.i(TAG,"Sorting by Name now!");
+                break;
+            case R.id.action_sort_by_upcoming_birthday:
+                Log.i(TAG,"Sorting by Upcoming Birthday now!");
+                break;
+        }
 
-        //no inspection
-        if (id == R.id.action_settings) {
+
+
+        if (id == R.id.action_sort_by_seniority) {
             return true;
         }
 

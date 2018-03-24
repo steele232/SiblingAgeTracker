@@ -16,6 +16,9 @@
     <string name="default_name">Name</string>
     <string name="default_date_string">Jan 5, 1995</string>
     <string name="helper_text">No Siblings yet!\nClick below to add some!</string>
+    <string name="sort_by_upcoming_birthday">Sort By Upcoming Birthdays</string>
+    <string name="sort_by_name">Sort by Name</string>
+    <string name="sort_by_seniority">Sort by Seniority</string>
 
 
 </resources>
