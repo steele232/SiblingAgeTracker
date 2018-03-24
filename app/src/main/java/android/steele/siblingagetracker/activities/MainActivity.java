@@ -166,13 +166,15 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(int uid) {
+        //TODO This parameter int is determined by the listener we give to the adapter and what the adapter returns from that listener we've passed down.
 
-        FamilyMember familyMember = _mainView.getFamilyMembers().getValue().get(position);
+        //SOLUTION. Stop using position. Starting using the UID. Saves two conversion steps and solves a problem as well.
+        Log.i(TAG, "Position : " + uid);
 
         Log.i(TAG, "Start of MainActivity ListItem onClick");
         Intent intent = new Intent(MainActivity.this , DetailFamilyMemberActivity.class);
-        intent.putExtra("key", familyMember.getUid());
+        intent.putExtra("key", uid);
         startActivity(intent);
         Log.i(TAG, "End of MainActivity ListItem onClick");
 

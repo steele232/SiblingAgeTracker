@@ -282,6 +282,16 @@ public class DetailFamilyMemberActivity extends AppCompatActivity
                 newFamilyMember.setName(newName);
             }
             _detailView.saveNewFamilyMember(); //it has the new family member of itself.
+        } else {
+            FamilyMember newFamilyMember = _detailView.getFamilyMember().getValue();
+            if (newFamilyMember != null) {
+                String newName = ((TextView) findViewById(R.id.editName)).getText().toString();
+                Log.i(TAG, "Name collected is : " + newName);
+                _detailView.getFamilyMember().getValue().setName(newName);
+//                newFamilyMember.setName(newName);
+            }
+            _detailView.updateFamilyMember(); //it has the new family member of itself.
+
         }
 
         // The Update is actually covered by the LiveData. WOOT WOOT!!

@@ -8,6 +8,7 @@ import android.steele.siblingagetracker.db.AppDatabase;
 import android.steele.siblingagetracker.db.FamilyMember;
 import android.steele.siblingagetracker.db.asynctasks.DeleteFamilyMemberTask;
 import android.steele.siblingagetracker.db.asynctasks.InsertFamilyMemberTask;
+import android.steele.siblingagetracker.db.asynctasks.UpdateFamilyMemberTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -53,6 +54,15 @@ public class DetailView extends AndroidViewModel {
     public void saveNewFamilyMember() {
         Log.i(TAG, "I'm starting to save a new family member");
         InsertFamilyMemberTask task = new InsertFamilyMemberTask(
+                _appDatabase,
+                _thisFamilyMember.getValue()
+        );
+        task.execute();
+    }
+
+    public void updateFamilyMember() {
+        Log.i(TAG, "I'm starting to update a family member");
+        UpdateFamilyMemberTask task = new UpdateFamilyMemberTask(
                 _appDatabase,
                 _thisFamilyMember.getValue()
         );

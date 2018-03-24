@@ -38,7 +38,9 @@ public class FamilyMemberRecyclerAdapter extends
         public TextView _birthdateView;
         public TextView _ageView;
         public FMOnClickListener _listener;
-        public int _position;
+
+        public int _uid;
+
         public FMViewHolder(View view, FMOnClickListener listener) {
             super(view);
             _nameView = (TextView) view.findViewById(R.id.name);
@@ -48,13 +50,13 @@ public class FamilyMemberRecyclerAdapter extends
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    _listener.onItemClick(_position);
+                    _listener.onItemClick(_uid);
                 }
             });
         }
 
-        public void bindFamilyMember(FamilyMember fm, int position) {
-            _position = position;
+        public void bindFamilyMember(FamilyMember fm) {
+            _uid = fm.getUid();
 
             _nameView.setText(fm.getName());
 
@@ -101,7 +103,7 @@ public class FamilyMemberRecyclerAdapter extends
 
     @Override
     public void onBindViewHolder(FMViewHolder holder, int position) {
-        holder.bindFamilyMember(_dataset.get(position), position);
+        holder.bindFamilyMember(_dataset.get(position));
 
         Log.i(TAG, "binding a value.. Does it have a ID? : " + _dataset.get(position).getUid());
     }
