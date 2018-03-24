@@ -22,10 +22,22 @@ public interface FamilyMemberDAO {
     LiveData<List<FamilyMember>> getAll();
 
     @Query("SELECT * FROM familymember WHERE uid IN (:familyIds)")
-    LiveData<FamilyMember> getFamilyMemberByID(int familyIds);
+    LiveData<List<FamilyMember>> getFamilyMembersByID(int[] familyIds);
+
+    @Query("SELECT * FROM familymember ORDER BY birthdate ASC")
+    LiveData<List<FamilyMember>> sortBySeniority();
+
+    @Query("SELECT * FROM familymember ORDER BY name ASC")
+    LiveData<List<FamilyMember>> sortByName();
+
+    @Query("SELECT * FROM familymember")
+    LiveData<List<FamilyMember>> sortByUpcomingBirthday();
+
+
 
     @Query("SELECT * FROM familymember WHERE uid IN (:familyIds)")
-    LiveData<List<FamilyMember>> getFamilyMembersByID(int[] familyIds);
+    LiveData<FamilyMember> getFamilyMemberByID(int familyIds);
+
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -39,5 +51,6 @@ public interface FamilyMemberDAO {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateFamilyMembers(FamilyMember... familyMembers);
+
 
 }

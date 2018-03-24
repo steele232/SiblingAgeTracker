@@ -6,7 +6,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.steele.siblingagetracker.db.AppDatabase;
 import android.steele.siblingagetracker.db.FamilyMember;
-import android.steele.siblingagetracker.db.utils.DatabaseInitializer;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -34,7 +33,7 @@ public class MainView extends AndroidViewModel {
 
 //        populateDb();
 
-        _familyMembers = _appDatabase.familyMemberDAO().getAll();
+        _familyMembers = _appDatabase.familyMemberDAO().sortByName();
 
     }
 
@@ -48,6 +47,17 @@ public class MainView extends AndroidViewModel {
         return _familyMembers;
     }
 
+    public void reloadSortingByAge() {
+        _familyMembers = _appDatabase.familyMemberDAO().sortBySeniority();
+    }
+
+    public void reloadSortingByName() {
+        _familyMembers = _appDatabase.familyMemberDAO().sortByName();
+    }
+
+    public void reloadSortingByUpcomingBirthday() {
+        _familyMembers = _appDatabase.familyMemberDAO().sortByUpcomingBirthday();
+    }
 
 
 }

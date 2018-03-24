@@ -78,10 +78,10 @@ public class MainActivity extends AppCompatActivity
 
                             // the test is whether the list is empty or not..
                             if (familyMembers.isEmpty()) {
-                                Log.i(TAG, "Main Activity family member list is now updated." + gson.toJson(familyMembers) );
+                                Log.i(TAG, "Main Activity family member list is now updated. " + gson.toJson(familyMembers) );
                                 showHelpers();
                             } else {
-                                Log.i(TAG, "Main Activity family member list is now updated." + gson.toJson(familyMembers) );
+                                Log.i(TAG, "Main Activity family member list is now updated. " + gson.toJson(familyMembers) );
                                 hideHelpers();
                             }
 
@@ -129,7 +129,40 @@ public class MainActivity extends AppCompatActivity
         _helperInstructions.setVisibility(View.VISIBLE);
     }
 
+    private void reAssignObservers() {
 
+        if (_mainView.getFamilyMembers().hasActiveObservers()) {
+            //remove them..
+            _mainView.getFamilyMembers().removeObservers(this);
+        }
+
+        final Observer<List<FamilyMember>> familyMemberListObserver =
+                new Observer<List<FamilyMember>>() {
+                    @Override
+                    public void onChanged(@Nullable List<FamilyMember> familyMembers) {
+                        Gson gson = new Gson();
+                        if (familyMembers != null) {
+                            //I don't know that this would ever be null....
+
+                            // the test is whether the list is empty or not..
+                            if (familyMembers.isEmpty()) {
+                                Log.i(TAG, "Main Activity family member list is now updated. " + gson.toJson(familyMembers) );
+                                showHelpers();
+                            } else {
+                                Log.i(TAG, "Main Activity family member list is now updated. " + gson.toJson(familyMembers) );
+                                hideHelpers();
+                            }
+
+                        } else {
+                            Log.e(TAG, "Main Activity family member list is now being updated to null. That's a problem.");
+                        }
+                        ((FamilyMemberRecyclerAdapter)_familyMemberRecyclerView.getAdapter()).setList(familyMembers);
+                        //TODO test thoroughly to make sure that works.
+                    }
+                };
+        _mainView.getFamilyMembers().observe(this, familyMemberListObserver);
+
+    }
 
 
 
@@ -153,20 +186,26 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.action_sort_by_seniority:
                 Log.i(TAG,"Sorting by Seniority now!");
-                break;
+                _mainView.reloadSortingByAge();
+                reAssignObservers();
+                return true;
             case R.id.action_sort_by_name:
                 Log.i(TAG,"Sorting by Name now!");
-                break;
+                _mainView.reloadSortingByName();
+                reAssignObservers();
+                return true;
             case R.id.action_sort_by_upcoming_birthday:
                 Log.i(TAG,"Sorting by Upcoming Birthday now!");
-                break;
+                _mainView.reloadSortingByUpcomingBirthday();
+                reAssignObservers();
+                return true;
         }
 
 
 
-        if (id == R.id.action_sort_by_seniority) {
-            return true;
-        }
+//        if (id == R.id.action_sort_by_seniority) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
