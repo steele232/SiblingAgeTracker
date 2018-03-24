@@ -37,7 +37,7 @@ public interface FamilyMemberDAO {
     @Query("DELETE FROM familymember")
     void deleteAll();
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateFamilyMembers(FamilyMember... familyMembers);
 
 }

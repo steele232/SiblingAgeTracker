@@ -85,7 +85,7 @@ public class DetailView extends AndroidViewModel {
 
         _thisFamilyMember = _appDatabase.familyMemberDAO().getFamilyMemberByID(keyToEdit);
 
-        _isInEdittingMode.setValue(true);
+        _isInEdittingMode.postValue(true);
     }
 
     public void startAddingFamilyMember() {
