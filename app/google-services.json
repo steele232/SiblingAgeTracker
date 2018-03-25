@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:516005028527:android:5b548d57158c338d",
         "android_client_info": {
-          "package_name": "android.steele.siblingagetracker"
+          "package_name": "steele.apps.siblingagetracker"
         }
       },
       "oauth_client": [
