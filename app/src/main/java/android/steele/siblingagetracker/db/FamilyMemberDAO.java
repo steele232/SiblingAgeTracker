@@ -24,6 +24,7 @@ public interface FamilyMemberDAO {
     @Query("SELECT * FROM familymember WHERE uid IN (:familyIds)")
     LiveData<List<FamilyMember>> getFamilyMembersByID(int[] familyIds);
 
+
     @Query("SELECT * FROM familymember ORDER BY birthdate ASC")
     LiveData<List<FamilyMember>> sortBySeniority();
 

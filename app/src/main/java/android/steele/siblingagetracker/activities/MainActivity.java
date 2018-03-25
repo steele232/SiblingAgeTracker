@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private String username = "user2";
-
     private MainView _mainView;
 
     private RecyclerView _familyMemberRecyclerView;

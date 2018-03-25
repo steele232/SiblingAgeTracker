@@ -3,7 +3,6 @@ package android.steele.siblingagetracker.db.asynctasks;
 import android.os.AsyncTask;
 import android.steele.siblingagetracker.db.AppDatabase;
 import android.steele.siblingagetracker.db.FamilyMember;
-import android.steele.siblingagetracker.service.AppData;
 
 /**
  * Created by jonathansteele on 3/17/18.

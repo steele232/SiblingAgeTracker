@@ -38,6 +38,30 @@ public class DetailView extends AndroidViewModel {
         _isInEdittingMode.postValue(false);
     }
 
+    public void startEditingFamilyMemberWithID(int keyToEdit) {
+        Log.i(TAG, "I'm starting to edit a family member");
+        // Get Family Member by Id
+        // set the FM & Editing Mode
+
+        _thisFamilyMember = _appDatabase.familyMemberDAO().getFamilyMemberByID(keyToEdit);
+
+        _isInEdittingMode.postValue(true);
+    }
+
+    public void startAddingFamilyMember() {
+        Log.i(TAG, "I'm starting to add a family member");
+
+        //set up a fresh blank Family Member.
+        FamilyMember fm = new FamilyMember();
+        fm.setName("");
+        fm.setBirthdate(new GregorianCalendar());
+
+        _thisFamilyMember = new MutableLiveData<>();
+        ((MutableLiveData<FamilyMember>) _thisFamilyMember).postValue(fm);
+
+        _isInEdittingMode.postValue(false);
+    }
+
 
     @Nullable
     public LiveData<FamilyMember> getFamilyMember() {
@@ -76,29 +100,5 @@ public class DetailView extends AndroidViewModel {
                 _thisFamilyMember.getValue()
         );
         task.execute();
-    }
-
-    public void startEditingFamilyMemberWithID(int keyToEdit) {
-        Log.i(TAG, "I'm starting to edit a family member");
-        // Get Family Member by Id
-        // set the FM & Editing Mode
-
-        _thisFamilyMember = _appDatabase.familyMemberDAO().getFamilyMemberByID(keyToEdit);
-
-        _isInEdittingMode.postValue(true);
-    }
-
-    public void startAddingFamilyMember() {
-        Log.i(TAG, "I'm starting to add a family member");
-
-        //set up a fresh blank Family Member.
-        FamilyMember fm = new FamilyMember();
-        fm.setName("");
-        fm.setBirthdate(new GregorianCalendar());
-
-        _thisFamilyMember = new MutableLiveData<>();
-        ((MutableLiveData<FamilyMember>) _thisFamilyMember).postValue(fm);
-
-        _isInEdittingMode.postValue(false);
     }
 }

@@ -31,8 +31,6 @@ public class MainView extends AndroidViewModel {
 
         _appDatabase = AppDatabase.getDatabase(this.getApplication());
 
-//        populateDb();
-
         _familyMembers = _appDatabase.familyMemberDAO().sortByName();
 
     }
