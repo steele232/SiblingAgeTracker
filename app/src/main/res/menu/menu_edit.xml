@@ -1,10 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="android.steele.siblingagetracker.MainActivity">
+    tools:context="android.steele.siblingagetracker.activities.MainActivity">
     <item
         android:id="@+id/action_delete"
-        android:title="@string/delete_title"
+        android:title="@string/icon_title_delete"
         android:icon="@mipmap/ic_action_delete"
 
         android:orderInCategory="100"

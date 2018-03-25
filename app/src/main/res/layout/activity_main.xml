@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="android.steele.siblingagetracker.MainActivity">
+    tools:context="android.steele.siblingagetracker.activities.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -14,13 +14,16 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            android:layout_gravity="center"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_main" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabEdit"
@@ -31,5 +34,35 @@
         app:backgroundTint="@color/colorPrimary"
         android:tint="@android:color/white"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="right|bottom"
+        tools:layout_editor_absoluteY="278dp">
+
+        <ImageView
+            android:id="@+id/helperArrow"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_arrow_helper_2" />
+
+        <TextView
+            android:id="@+id/helperInstructions"
+            android:layout_width="209dp"
+            android:layout_height="54dp"
+            android:layout_marginBottom="130dp"
+            android:layout_marginEnd="45dp"
+            android:text="@string/helper_text"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.design.widget.CoordinatorLayout>

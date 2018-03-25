@@ -1,7 +1,25 @@
 <resources>
     <string name="app_name">Sibling Age Tracker</string>
+    <string name="title_main">Sibling Age Tracker</string>
+    <string name="title_add">Add Sibling</string>
+    <string name="title_edit">Edit Sibling</string>
+
+    <string name="icon_title_delete">Delete</string>
     <string name="action_notifications">Notifications</string>
-    <string name="delete_title">Delete</string>
-    <string name="NotificationsSettingText2">How early do you want your notifications?</string>
+
+    <string name="instructions_notification_settings">How early do you want your notifications?</string>
     <string name="name_to_edit">EDIT_ME</string>
+
+    <string name="preferencesKey">app_preferences_key</string>
+    <string name="app_data_key">app_data_kay</string>
+    <string name="default_age">55</string>
+    <string name="default_name">Name</string>
+    <string name="default_date_string">Jan 5, 1995</string>
+    <string name="helper_text">No Siblings yet!\nClick below to add some!</string>
+    <string name="sort_by_upcoming_birthday">Sort By Upcoming Birthdays</string>
+    <string name="sort_by_name">Sort by Name</string>
+    <string name="sort_by_seniority">Sort by Seniority</string>
+
+
 </resources>
+

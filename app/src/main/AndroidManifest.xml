@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,28 +19,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SettingsActivity"
-            android:parentActivityName=".MainActivity"/>
 
-
-        <activity android:name=".AddFamilyMemberActivity"
-            android:parentActivityName="android.steele.siblingagetracker.MainActivity"
+        <activity android:name=".activities.DetailFamilyMemberActivity"
             android:launchMode="singleTop">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="android.steele.siblingagetracker.MainActivity"/>
         </activity>
 
-
-
-
-        <activity android:name=".EditFamilyMemberActivity"
-            android:parentActivityName="android.steele.siblingagetracker.MainActivity"
-            android:launchMode="singleTop">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="android.steele.siblingagetracker.MainActivity"/>
-        </activity>
 
     </application>
 
