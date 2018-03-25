@@ -55,9 +55,4 @@ public class MainView extends AndroidViewModel {
         _familyMembers = _appDatabase.familyMemberDAO().sortByName();
     }
 
-    public void reloadSortingByUpcomingBirthday() {
-        _familyMembers = _appDatabase.familyMemberDAO().sortByUpcomingBirthday();
-    }
-
-
 }

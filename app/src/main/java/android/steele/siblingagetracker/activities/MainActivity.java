@@ -194,18 +194,7 @@ public class MainActivity extends AppCompatActivity
                 _mainView.reloadSortingByName();
                 reAssignObservers();
                 return true;
-            case R.id.action_sort_by_upcoming_birthday:
-                Log.i(TAG,"Sorting by Upcoming Birthday now!");
-                _mainView.reloadSortingByUpcomingBirthday();
-                reAssignObservers();
-                return true;
         }
-
-
-
-//        if (id == R.id.action_sort_by_seniority) {
-//            return true;
-//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -213,7 +202,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(int uid) {
-        //TODO This parameter int is determined by the listener we give to the adapter and what the adapter returns from that listener we've passed down.
 
         //SOLUTION. Stop using position. Starting using the UID. Saves two conversion steps and solves a problem as well.
         Log.i(TAG, "Position : " + uid);

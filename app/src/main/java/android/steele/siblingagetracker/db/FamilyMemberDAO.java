@@ -30,9 +30,6 @@ public interface FamilyMemberDAO {
     @Query("SELECT * FROM familymember ORDER BY name ASC")
     LiveData<List<FamilyMember>> sortByName();
 
-    @Query("SELECT * FROM familymember")
-    LiveData<List<FamilyMember>> sortByUpcomingBirthday();
-
 
 
     @Query("SELECT * FROM familymember WHERE uid IN (:familyIds)")
